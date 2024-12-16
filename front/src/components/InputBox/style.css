@@ -1,0 +1,119 @@
+@import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Sans+KR:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&display=swap');
+
+*{
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+.input-box{
+    display: flex;
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+.input-box-title{
+    color: rgb(13, 12, 34);
+    font-size: 15px;
+    font-weight: 500;
+    line-height: normal;
+
+    cursor: default;
+}
+
+.input-box-content{
+    display: flex;
+    flex-direction: column;
+
+    gap: 4px;
+}
+
+.input-box-body{
+    display: flex;
+
+    gap: 10px;
+}
+
+.input-box-input{
+    flex: 1;
+
+    border: 1px solid rgb(231, 231, 233);
+    border-radius: 6px;
+    padding: 8px;
+    height: 48px;
+
+    outline: none;
+
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 175%;
+}
+
+.input-box-input::placeholder{
+    color: rgba(138, 146, 166, 1);
+
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 175%;
+}
+
+.input-box-button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 6px;
+    width: 110px;
+    height: 44px;
+
+    background-color: rgba(58, 87, 232, 0.2);
+
+    color: rgba(45, 66, 178, 1);
+
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 175%;
+
+    cursor: pointer;
+}
+
+.input-box-button:hover{
+    background-color: rgba(58, 87, 232, 0.4);
+}
+
+.input-box-message{
+    color: rgba(58, 87, 248, 1);
+
+    font-size: 13px;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.input-box-message-error{
+    color: rgba(255, 84, 64, 1);
+
+    font-size: 13px;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.input-box-button-disable{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 6px;
+    width: 110px;
+    height: 44px;
+
+    background-color: rgba(240, 240, 240, 1);
+
+    color: rgba(138, 146, 166, 1);
+
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 175%;
+
+    cursor: default;
+}

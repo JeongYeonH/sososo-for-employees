@@ -1,0 +1,221 @@
+@import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Sans+KR:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&display=swap');
+
+#home-page-wrapper{
+
+    
+    width: 100%;
+    height: 100%;
+    min-height: 900px;
+}
+
+.sections{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 70px;
+    margin-bottom: 20px;
+}
+
+.main-text{
+    font-size: 60px;
+    font-family: "Noto Serif", serif;
+    margin: 20px;
+}
+
+.sub-text{
+    font-size: 16px;   
+    margin: 10px;
+}
+
+.discription{
+    font-family: "Noto Serif KR", serif;
+    font-weight: 500;
+    font-size: 17px;
+    text-align: center;
+    line-height: 1.8;
+}
+
+.sososo-search-box{
+    width: 600px;
+    display: flex;
+    align-items: center;
+    background: rgb(243, 243, 246);
+    padding: 1px 20px;
+    border-radius: 50px;
+    margin: 20px;
+}
+
+.search-icon{
+    width: 66px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.sososo-search-box input{
+    width: 900px;
+    height: 50px;
+    padding: 6px;
+    font-family: "Noto Serif KR", serif;
+    background-color: transparent;
+    border: 0;
+    outline: 0;
+    font-size: 14px;
+}
+
+.category-box{
+    display: flex;
+    margin-top: 60px;
+}
+
+.category-btn{
+    font-size: 14px;
+    font-weight: 500;
+    font-family: "Roboto", sans-serif;
+    margin-left: 8px;
+}
+
+.category-list{
+    display: flex;
+    flex-direction: row;
+    white-space: nowrap;
+    gap: 50px;
+    margin: 0;
+    padding: 10px;
+    list-style-type: none;
+    font-size: 16px;
+    font-family: "Noto Serif KR", serif;
+    text-align: center;
+}
+
+.category-list li{
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.category-list li:hover{
+    color: rgb(77, 77, 77);
+}
+
+.category-filter{
+    display: flex;
+    align-items: center;
+
+    margin-top: 4px;
+    position: absolute;
+    left: 60px;
+
+    width: 120px;
+    height: 40px;
+    outline: 0;
+    border: 1px solid ;
+    border-radius: 10px;
+    border-color: rgb(233, 233, 235);
+    background-color: white;
+}
+
+.category-filter-text{
+    margin-left: 20px;
+    font-family: "Roboto", sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.arrow-down{
+    margin-top: 2px;
+    margin-left: 20px;
+    font-size: 8px;
+}
+
+.category-list-chocies{
+    position: absolute;
+    z-index: 2;
+    top: 560px;
+    left: 60px;
+    list-style-type: none;
+
+    width: 160px;
+    border: 1px solid ;
+    border-radius: 10px;
+    border-color: rgb(233, 233, 235);
+
+    background-color: white;
+}
+
+
+.category-list-chocies-card{
+    padding: 16px;
+    padding-left: 20px;
+    font-family: "Roboto", sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: rgb(102, 102, 115);
+    cursor: pointer;
+}
+
+.category-list-chocies-card:hover{
+    background-color: rgb(221, 233, 254);
+}
+
+.filter{
+    display: flex;
+    align-items: center;
+
+    margin-top: 4px;
+    position: absolute;
+    right: 60px;
+
+    width: 100px;
+    height: 40px;
+    outline: 0;
+    border: 1px solid ;
+    border-radius: 20px;
+    border-color: rgb(233, 233, 235);
+    background-color: white;
+}
+
+.kind-of-wifi-icon{
+    margin-top: 4px;
+    margin-left: 12px;
+    font-size: 27px;
+}
+
+.filter-text{
+    font-family: "Roboto", sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.card-sections{
+    margin: 0px 60px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 28px;
+}
+
+.card-box{
+    margin: 10px 0px;
+    cursor: pointer;
+}
+
+.default-card-image{
+    width: 420px;
+    height: 330px;
+    object-fit: cover; 
+    overflow: hidden;
+    border-radius: 10px;
+  }
+
+.category-list-card{
+    font-weight: 500;
+    cursor: pointer;
+}
+
+
+.category-list-card:hover{
+    color: rgb(73, 73, 73);
+}
+  

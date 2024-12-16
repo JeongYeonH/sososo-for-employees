@@ -1,0 +1,218 @@
+@import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Sans+KR:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&display=swap');
+
+*{
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+.chat-room-wrapper{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(246, 246, 246);
+}
+
+.chat-room-container{
+    margin: 20px 0px;
+    width: 800px;
+    height: 800px;
+    display: flex;
+}
+
+.chat-room-list{
+    width: 240px;   
+    background-color: white;
+    margin-right: 20px;
+    border: 1px solid rgb(235, 235, 235);
+}
+
+.chat-room-chats{
+    width: 580px;
+    background-color: white;
+    border: 1px solid rgb(235, 235, 235);
+}
+
+.chat-room-title{
+    display: flex;
+    align-items: center;
+    height: 50px;
+    padding: 0px 0px;
+    font-weight: 500;
+}
+
+.chat-room-title-title{
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgb(235, 235, 235);
+    height: 51px;
+    padding: 0px 10px;
+    font-weight: 500;
+}
+
+.chat-room-title-joined-memebers{
+    display: flex;
+    margin-left: 20px;
+    font-size: 14px;
+    width: 40px;
+    color: rgb(158, 158, 167);
+}
+
+.icon-adjust{
+    margin-top: 3px;
+    padding-top: 1px;
+    margin-left: 3px;
+}
+
+.chat-room-list-frame{
+    overflow-y: auto;
+    height: 749px;
+}
+
+.chat-room-list-frame::-webkit-scrollbar{
+    display: none;
+}
+
+.chat-room-list-card{
+    height: 66px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.chat-room-list-card:hover{
+    background-color: rgb(221, 233, 254);
+}
+
+.chat-room-list-card-text-titles{
+    width: 160px;
+    font-size: 13px;
+    font-weight:400;
+    display: flex;
+    justify-content: space-between;
+}
+
+.chat-room-list-card-text-members{
+    display: flex;
+    font-size: 10px;
+    color: rgb(129, 129, 129);
+}
+
+.chat-room-list-card-thumbnail{
+    margin: 0px 10px;
+    width: 35px;
+    height: 35px;
+    object-fit: cover; 
+    overflow: hidden;
+    border-radius: 50%;
+    position: relative; 
+}
+
+.chat-room-list-card-text-recent-message{
+    font-size: 10px;
+    color: rgb(129, 129, 129);
+}
+
+.chat-room-chat-frame{
+    overflow-y: auto;
+    height: 690px;
+    border-bottom: 1px solid rgb(235, 235, 235);
+}
+
+.chat-room-chat-frame::-webkit-scrollbar{
+    display: none;
+}
+
+.chat-room-chat-comment-card{
+    margin-top: 8px;
+    height: 56px;
+    display: flex;
+}
+
+.chat-room-chat-comment-img{
+    margin: 5px 10px;
+    width: 30px;
+    height: 30px;
+    object-fit: cover; 
+    overflow: hidden;
+    border-radius: 50%;
+    position: relative; 
+}
+
+.chat-room-chat-comment-info-titles{
+    display: flex;
+}
+
+.chat-room-chat-comment-info-sender{
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.chat-room-chat-comment-info-time{
+    margin-left: 10px;
+    font-size: 12px;
+    color: rgb(197, 197, 197);
+}
+
+.chat-room-chat-comment-info-message{
+    font-size: 14px;
+}
+
+.chat-room-chat-input-box{
+    display: flex;
+}
+
+.chat-room-chat-input{
+    width: 490px;
+    border: none;
+    outline: none;
+    padding-left: 10px;
+    resize: none;
+    font-size: 12px;
+}
+
+.chat-room-chat-input-btn{
+    padding-top: 5px;
+    margin-left: 10px;
+    background-color: transparent;
+    border: none;
+    font-size: 36px;
+    color: rgb(129, 129, 129);
+}
+
+.chat-room-chat-input-btn:hover{
+    color: rgb(173, 173, 173);
+}
+
+.chat-room-invite-request-btn{
+    margin-left: 10px;
+    background-color: transparent;
+    color: rgb(0, 102, 255);
+    padding: 5px;
+    border: 1px solid rgb(219, 220, 222);
+    border-radius: 15px; 
+    cursor: pointer;  
+}
+
+.chat-room-invite-request-btn:hover{
+    background-color: rgb(236, 242, 250);
+}
+
+.strong-stress-chat-message{
+    font-weight: 600;
+}
+
+.chat-room-member-list-box{
+    width: 170px;
+    height: 800px;
+    background-color: white;
+    border: 1px solid rgb(235, 235, 235);
+    position: absolute;
+    left: 50%;
+    transform: translateX(410px);
+}
+
+.chat-room-member-list{
+    overflow-y: auto;
+    height: 749px;
+}

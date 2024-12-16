@@ -1,0 +1,169 @@
+@import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Sans+KR:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&display=swap');
+
+*{
+    font-family: "Noto Serif", serif;
+}
+
+#sign-in-wrapper{
+    margin-top: 200px;
+    margin-bottom: 140px;
+}
+
+.sign-in-image{
+    width: 830px;
+    background-position: 50% 50%;
+    background-size: 100% 100%;
+    background-image: url();
+}
+
+.sign-in-container{
+    flex: 1;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.sign-in-box{
+    width: 380px;
+    display: flex;
+    flex-direction: column;
+
+    gap: 24px;
+}
+
+.sign-in-title{
+    color:  rgb(13, 12, 34);
+    font-family: 'Playball', cursive;
+    display: flex;
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 173%;
+}
+
+.sign-in-content-box{
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+
+    gap:24px;
+
+}
+
+.sign-in-content-sns-sign-in-box{
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    gap: 16px;
+}
+
+.sign-in-content-sns-sign-in-title{
+    font-family: 'Noto Sans KR', sans-serif;
+    color: rgba(138, 146, 166, 1);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: normal;
+}
+
+
+.sign-in-content-sns-sign-in-title:after{
+    content: "0000000000000";
+    color: transparent;
+    flex: 1;
+    border-bottom: 1px solid rgb(231, 231, 233);
+    margin-left: 13px;
+
+    position: relative;
+    bottom: 8px;
+}
+.sign-in-content-sns-sign-in-title:before{
+    content: "0000000000000";
+    color: transparent;
+    flex: 1;
+    border-bottom: 1px solid rgb(231, 231, 233);
+    margin-right: 13px;
+    position: relative;
+    bottom: 8px;
+}
+
+.sign-in-content-sns-sign-in-button-box{
+    gap: 24px;
+}
+
+.social-sign-in-button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: white;
+    height: 50px;
+    width: 380px;
+    border-radius: 40px;
+    border: 1px solid rgb(231, 231, 233);
+    margin-bottom: 20px;
+    
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 14px;
+    color: rgb(13, 12, 34);
+
+    cursor: pointer;
+}
+
+.icon-renderer{
+    width: 20px;
+    height: 24px;
+    object-fit: cover; 
+    overflow: hidden;
+    position: relative;
+
+    margin-right: 20px;
+    margin-top: 4px;
+}
+
+.icon-renderer img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.sign-in-content-divider{
+    border-top: 1px rgba(238, 238, 238, 1);
+    width: 63px;   
+}
+
+.sign-in-content-input-box{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.sign-in-content-button-box{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    
+    gap: 16px;
+}
+
+.sign-in-button{
+    background-color: rgb(13, 12, 34);
+    color: white;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    border-radius: 40px;
+
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 500;
+}
+
+.sign-in-button:hover{
+    background-color: rgb(42, 39, 82);
+}

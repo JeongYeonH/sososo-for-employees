@@ -1,0 +1,10 @@
+
+
+.club-member-profile-image{
+    width: 35px;
+    height: 35px;
+    object-fit: cover; 
+    overflow: hidden;
+    border-radius: 50%;
+    position: relative; 
+}

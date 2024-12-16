@@ -1,0 +1,98 @@
+@import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Sans+KR:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&display=swap');
+
+*{
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+.create-user-page-sections{
+    display: flex;
+    justify-content: center;
+}
+
+.create-user-page-container{
+    width: 820px; 
+    height: 830px;
+}
+
+.box-one{
+    display: flex;
+} 
+
+.box-two{
+    display: flex;
+    justify-content: center;
+}
+
+.create-user-page-box{
+    width: 820px;
+    height: 300px;
+    margin-top: 20px;
+    border: 1px solid rgb(219, 220, 222);
+    border-radius: 20px;
+
+    font-size: 13px;
+    padding: 40px 40px;
+}
+
+.create-user-box-sub-box-profile-image{
+    display: flex;
+    align-items: center;
+    height: 70px;
+}
+
+.create-user-box-sub-box{
+    display: flex;
+    align-items: center;
+    height: 40px;
+    border-top: 1px solid rgb(219, 220, 222);
+}
+
+.create-user-box-sub-box-short-intro{
+    display: flex;
+    align-items: center;
+    height: 70px;
+    border-top: 1px solid rgb(219, 220, 222);
+}
+
+.create-user-box-data-name{
+    width: 150px;
+    font-size: 12px;
+    font-weight: 500;
+    color: rgb(96, 98, 98);
+}
+
+.create-user-box-data-input{
+    width: 500px;
+    height: 30px;
+    border: transparent;
+}
+
+.create-user-box-data-text{
+    margin-top: 38px;
+    width: 500px;
+    height: 60px;
+    border: transparent;
+    outline: none;  
+    resize: none;
+    overflow: hidden;
+}
+
+.create-user-submit-btn{
+    margin-top: 30px;
+    background-color: rgb(13, 12, 34);
+    color: white;
+
+    height: 50px;
+    width: 150px;
+    border-radius: 40px;
+    border: none;
+
+    font-weight: 500;
+    font-size: 16px;
+}
+
+.create-user-submit-btn:hover{
+    background-color: rgb(42, 39, 82);
+}

@@ -1,0 +1,93 @@
+@import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Sans+KR:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&display=swap');
+
+
+.card-container{
+    width: 420px;
+    height: 360px;
+    border-radius: 10px;
+
+}
+
+.card-info{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 7px;
+}
+
+.card-title-container{
+    display: flex;
+}
+
+.card-title{
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+}
+
+.card-title-sub-info{
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    color: white;
+
+    align-items: center;
+    border-radius: 5px;
+    background-color: rgb(204, 204, 204);
+    
+    margin-left: 15px;
+    margin-top: 2px;
+    padding: 0px 5px;
+}
+
+.card-sub-info-container{
+    display: flex;
+}
+
+.card-memeber-num{
+    display: flex;
+    font-size: 15px;
+    color: rgb(158, 158, 167);
+    align-items: center;
+}
+
+.card-memeber-num li{
+    list-style-type: none;
+    font-size: 13px;
+    margin-left: 6px;
+    margin-bottom: 2px;
+}
+
+.card-viewed{
+    display: flex;
+    font-size: 15px;
+    color: rgb(158, 158, 167);
+    margin-left: 15px;
+    align-items: center;
+}
+
+.card-viewed li{
+    list-style-type: none;
+    font-size: 13px;
+    margin-left: 6px; 
+    margin-bottom: 2px;
+}
+
+.default-card-image{
+    width: 420px;
+    height: 330px;
+    object-fit: cover; 
+    overflow: hidden;
+    border-radius: 10px;
+    position: relative;
+}
+  
+.default-image {
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover; 
+    position: absolute; 
+    top: 0; 
+    left: 0; 
+}

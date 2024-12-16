@@ -1,0 +1,106 @@
+@import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Sans+KR:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playball&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;  
+}
+
+.container{
+    width: 100vw;
+    min-height: 100vh;
+    
+}
+
+.navbar{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 9px 7%;
+    border-bottom: 1px solid rgb(235, 235, 235);
+}
+
+.logo{
+    width: 160px;
+    cursor: pointer;
+}
+
+.logos{
+    display: flex;
+}
+
+.sososo-logo{
+    width: 23px;
+    cursor: pointer;
+    margin-top: 4px;
+    margin-right: 12px;
+}
+
+.title{
+    margin-top: 2px;
+    font-size: 35px;
+    font-family: 'Playball', cursive;
+    cursor: pointer;
+}
+
+.login-btn{
+    width: 90px;
+    height: 40px;
+    margin: 0px 1px;
+    padding: 8px;
+    border-width: 0px;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: 'Noto Sans KR', sans-serif;
+    cursor: pointer;
+    background-color: white;
+}
+
+.login-btn:hover{
+    color: rgba(9, 7, 67, 0.8);
+}
+
+.signin-btn{
+    width: 90px;
+    height: 40px;
+    margin: 0px 1px;
+    padding: 8px;
+    border: 1;
+    border-width: 0px;
+    outline: 0;
+    border-radius: 50px;
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: 'Noto Sans KR', sans-serif;
+    cursor: pointer;
+    background-color: rgb(13, 12, 34);
+}
+
+.signin-btn:hover{
+    background-color: rgba(9, 7, 67, 0.8);
+}
+
+.user-logged-info{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+
+    font-size: 22px;
+}
+
+.user-go-to-profile{
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    width: 33px;
+    height: 33px;
+    object-fit: cover; 
+    overflow: hidden;
+    border-radius: 50%;
+    position: relative; 
+}

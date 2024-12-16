@@ -1,0 +1,177 @@
+# 자동화 ci cd 과정입니다.
+
+
+name: Deploy to Amazon EC2 and S3
+
+on:
+  push:
+    branches:  
+      - main 
+
+# env:
+                                      
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Build
+        uses: docker/setup-buildx-action@v2
+
+      - name: Grant execute permission to gradlew
+        run: |
+          cd back
+          chmod +x ./gradlew 
+          
+
+      - name: Download application.properties from S3 URL
+        run: |
+          curl -o back/src/main/resources/application.properties https://myappconfig.s3.ap-northeast-2.amazonaws.com/application.properties
+
+      - name: Verify application.properties
+        run: |
+          ls -l back/src/main/resources/
+          cat back/src/main/resources/application.properties
+          
+          
+      - name: Build Java project with Gradle
+        run: |
+          cd back
+          ./gradlew build 
+
+      - name: List build/libs directory to verify JAR file
+        run: |
+          cd back
+          ls build/libs/
+
+      - name: Build Back and Front Docker image
+        run: |
+          cd back
+          docker build -t my-docker-back .
+          docker save my-docker-back -o my-docker-back.tar
+
+          cd ../front
+          docker build -t my-docker-front .
+          docker save my-docker-front -o my-docker-font.tar
+
+
+      - name: Show Docker images size
+        run: |
+          docker images my-docker-back --format "{{.Size}}"
+          docker images my-docker-front --format "{{.Size}}"
+
+
+      - name: Setting Uploading Docker images to S3
+        run: |
+          echo "${{ secrets.AWS_SSH_PRIVATE_KEY }}" > private-key.pem
+          chmod 600 private-key.pem
+
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws configure set region ap-northeast-2
+
+          
+      - name: Check if Docker image exists in S3
+        run: |
+          if aws s3 ls s3://myappconfig/my-docker-back.tar > /dev/null; then
+            echo "File my-docker-back already exists in S3. Downloading..."
+          else
+            echo "File my-docker-back does not exist in S3. Uploading..."
+            aws s3 cp ./back/my-docker-back.tar s3://myappconfig/my-docker-back.tar
+          fi
+
+          if aws s3 ls s3://myappconfig/my-docker-front.tar > /dev/null; then
+            echo "File my-docker-front already exists in S3. Downloading..."
+          else
+            echo "File my-docker-front does not exist in S3. Uploading..."
+            aws s3 cp ./back/my-docker-front.tar s3://myappconfig/my-docker-front.tar
+          fi
+
+
+      - name: Configure AWS CLI 2
+        run: |
+          aws configure set aws_access_key_id "${{ secrets.AWS_ACCESS_KEY_ID }}"
+          aws configure set aws_secret_access_key "${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+          aws configure set region ap-northeast-2
+
+
+      - name: Download Docker image Back from S3 if not exists
+        run: |
+          echo "${{ secrets.AWS_SSH_PRIVATE_KEY }}" > private-key.pem
+          chmod 600 private-key.pem
+          echo "SSH private key added and permissions set."
+          ssh -o StrictHostKeyChecking=no -i private-key.pem ubuntu@ec2-3-39-252-205.ap-northeast-2.compute.amazonaws.com << 'EOF'
+            echo "Connecting to EC2 instance..."
+
+            aws sts get-caller-identity
+            if [ $? -ne 0 ]; then
+              echo "Error: AWS CLI is not properly authenticated. Check AWS credentials."
+              exit 1
+            fi
+                        
+            if [ ! -f /home/ubuntu/my-docker-back.tar ]; then
+              echo "File does not exist. Downloading..."
+              
+              AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} \
+              AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \             
+              aws s3 cp s3://myappconfig/my-docker-back.tar /home/ubuntu/my-docker-back.tar || echo "Failed to download the file from S3."
+            else
+              echo "File already exists. Skipping download."
+            fi
+          EOF
+
+
+      - name: Download Docker image Front from S3 if not exists
+        run: |
+          echo "${{ secrets.AWS_SSH_PRIVATE_KEY }}" > private-key.pem
+          chmod 600 private-key.pem
+          echo "SSH private key added and permissions set."
+          ssh -o StrictHostKeyChecking=no -i private-key.pem ubuntu@ec2-43-200-255-143.ap-northeast-2.compute.amazonaws.com << 'EOF'
+            echo "Connecting to EC2 instance..."
+
+            aws sts get-caller-identity
+            if [ $? -ne 0 ]; then
+              echo "Error: AWS CLI is not properly authenticated. Check AWS credentials."
+              exit 1
+            fi
+                        
+            if [ ! -f /home/ubuntu/my-docker-back.tar ]; then
+              echo "File does not exist. Downloading..."
+              
+              AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} \
+              AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \             
+              aws s3 cp s3://myappconfig/my-docker-front.tar /home/ubuntu/my-docker-front.tar || echo "Failed to download the file from S3."
+            else
+              echo "File already exists. Skipping download."
+            fi
+          EOF
+          
+
+      - name: Load Docker image from tar file and Run
+        run: |
+          echo "${{ secrets.AWS_SSH_PRIVATE_KEY }}" > private-key.pem
+          chmod 600 private-key.pem
+          
+          ssh -o StrictHostKeyChecking=no -i private-key.pem ubuntu@ec2-3-39-252-205.ap-northeast-2.compute.amazonaws.com << 'EOF'
+            # Run Docker Back load inside the EC2 instance
+            sudo docker load -i /home/ubuntu/my-docker-back.tar
+            # Optional: Start the container after loading the image
+            sudo docker rm my-back-container || true
+            sudo docker run -d --name my-back-container -p 4040:4040 my-docker-back:latest
+          EOF
+
+          ssh -o StrictHostKeyChecking=no -i private-key.pem ubuntu@ec2-43-200-255-143.ap-northeast-2.compute.amazonaws.com << 'EOF'
+            # Run Docker Front load inside the EC2 instance
+            sudo docker load -i /home/ubuntu/my-docker-front.tar
+            # Optional: Start the container after loading the image
+            sudo docker rm my-back-container || true
+            sudo docker run -d --name my-front-container -p 4040:4040 my-docker-front:latest
+          EOF
+      
+          
+          
+          
+          

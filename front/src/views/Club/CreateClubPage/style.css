@@ -1,0 +1,219 @@
+@import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Sans+KR:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&display=swap');
+
+*{
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+.create-club-wrapper{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 40px;
+}
+
+.create-club-wrpper-box{
+    display: flex;
+
+    margin-top: 20px;
+    width: 820px;
+    height: 1000px;
+    border: 1px solid rgb(235, 235, 235);
+    border-radius: 5px;
+}
+
+.default-wrapper{
+    margin-top: 20px;
+    margin-left: 20px;
+}
+
+.default-wrapper li{
+    list-style: none;
+    font-size: 16px;
+    font-weight: 500;
+    color: rgb(62, 62, 63);
+}
+
+.create-club-box{
+    margin-right: 20px;
+    margin-top: 17px;
+
+    height: 880px;
+    width: 550px;
+    border: 1px solid rgb(235, 235, 235);
+    border-radius: 20px;
+}
+
+.create-club-status-box{
+    margin-top: 60px;
+    margin-right: 20px;
+
+    height: 320px;
+    width: 240px;
+    border: 1px solid rgb(235, 235, 235);
+    border-radius: 20px;
+    padding: 20px;
+}
+
+.create-club-title-wrapper{
+    margin: 30px 30px;
+}
+
+.create-club-title-wrapper li{
+    font-size: 14px;
+}
+
+.highlight {
+    color: red;
+}
+
+.create-club-title-input{
+    margin-top: 8px;
+    height: 32px;
+    width: 488px;
+    font-size: 14px;
+    border: 1px solid rgb(209, 209, 209);
+    border-radius: 10px;
+    outline: none;
+    padding-left: 5px;
+}
+
+.create-club-title-input::placeholder{
+    color: rgb(209, 209, 209);
+}
+
+.create-club-text-input-wrapper{
+    margin: 30px 30px;
+}
+
+.create-club-text-input-wrapper li{
+    font-size: 14px;
+}
+
+.create-club-text-input{
+    margin-top: 8px;
+    height: 130px;
+    border: 1px solid #d1d1d1;
+    width: 488px;
+    border-radius: 10px;
+    outline: none;
+    font-size: 14px;
+    padding-top: 6px;
+    padding-left: 5px;
+    resize: none;  
+}
+
+.create-club-text-input::placeholder{
+    color: rgb(209, 209, 209);
+}
+
+.create-club-text-input-short-brief{
+    margin-top: 5px;
+    font-size: 12px;
+    color:  rgb(100, 100, 100);
+}
+
+.create-club-image-input{
+    margin-top: 8px;
+    font-size: 12px;
+}
+
+.create-club-status-list{
+    list-style: none;
+    font-size: 13px;
+}
+
+.create-club-status-list li{
+    line-height: 2.2;
+    color: rgb(123, 123, 125);
+}
+
+.create-club-status-list-title{
+    font-size: 17px;
+    font-weight: 500;
+    margin-bottom: 15px;
+}
+
+.create-club-status-description{
+    margin-top: 16px;
+    font-size: 11px;
+    color: rgb(163, 164, 165);
+}
+
+.create-club-status-button{
+    margin-top: 15px;
+    width: 166px;
+    height: 36px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.create-club-status-button:hover{
+    background-color: rgb(0, 102, 255);
+    color: white;
+}
+
+.create-club-status-text{
+    margin-top: 2px;
+    font-size: 14px;
+}
+
+.create-club-status-choice-btn{
+    background-color: rgb(238, 238, 238);
+    border: 1px solid rgb(221, 221, 221);
+    font-size: 13px;
+    padding: 1px 3px;
+    border-radius: 5px;
+}
+
+.create-club-status-choice-btn:hover{
+    background-color: rgb(250, 250, 250);
+}
+
+.create-club-choice-toogle-box{
+    width: 60px;
+    background-color: white;
+    border: 1px solid rgb(221, 221, 221);
+    border-radius: 5px;
+    
+    position: absolute;
+    top: 29%;
+    left: 50%; 
+    transform: translateX(-50%) translateX(339px);
+}
+
+.create-club-choice-toogle-box-loc{
+    width: 60px;
+    background-color: white;
+    border: 1px solid rgb(221, 221, 221);
+    border-radius: 5px;
+    
+    position: absolute;
+    top: 33%;
+    left: 50%; 
+    transform: translateX(-50%) translateX(339px);
+}
+
+.create-club-choice-toogle-box-num{
+    width: 60px;
+    background-color: white;
+    border: 1px solid rgb(221, 221, 221);
+    border-radius: 5px;
+    
+    position: absolute;
+    top: 37%;
+    left: 50%; 
+    transform: translateX(-50%) translateX(339px);
+}
+
+.create-club-choice-toogle-card{
+    cursor: pointer;
+    padding: 4px 4px;
+    color: rgb(136, 136, 136);
+    font-size: 12px;
+}
+
+.create-club-choice-toogle-card:hover{
+    background-color: rgb(221, 233, 254);
+}
