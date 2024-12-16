@@ -63,8 +63,7 @@ export default function CreateUserPage(){
   
       createUserInfoRequest(formData, token).then();
 
-      navigate('/user/personal-profile');
-      window.location.reload();
+      navigate('/user/personal-profile', { replace: true });
     };
   
   

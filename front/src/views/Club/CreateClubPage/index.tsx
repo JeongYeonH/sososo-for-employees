@@ -82,8 +82,8 @@ export function CreateClubPage() {
     }
 
     createClubRequest(formData, token).then();
-    navigate("/");
-    window.location.reload(); 
+    navigate("/", { replace: true });
+
   };
 
 
