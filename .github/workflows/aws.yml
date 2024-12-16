@@ -100,7 +100,7 @@ jobs:
           echo "${{ secrets.AWS_SSH_PRIVATE_KEY }}" > private-key.pem
           chmod 600 private-key.pem
           echo "SSH private key added and permissions set."
-          ssh -o StrictHostKeyChecking=no -i private-key.pem ubuntu@ec2-3-39-252-205.ap-northeast-2.compute.amazonaws.com << 'EOF'
+          ssh -o StrictHostKeyChecking=no -i private-key.pem ubuntu@ec2-3-39-65-164.ap-northeast-2.compute.amazonaws.com << 'EOF'
             echo "Connecting to EC2 instance..."
 
             aws sts get-caller-identity
@@ -126,7 +126,7 @@ jobs:
           echo "${{ secrets.AWS_SSH_PRIVATE_KEY }}" > private-key.pem
           chmod 600 private-key.pem
           echo "SSH private key added and permissions set."
-          ssh -o StrictHostKeyChecking=no -i private-key.pem ubuntu@ec2-43-200-255-143.ap-northeast-2.compute.amazonaws.com << 'EOF'
+          ssh -o StrictHostKeyChecking=no -i private-key.pem ubuntu@ec2-13-125-36-149.ap-northeast-2.compute.amazonaws.com << 'EOF'
             echo "Connecting to EC2 instance..."
 
             aws sts get-caller-identity
