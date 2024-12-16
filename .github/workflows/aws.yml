@@ -55,7 +55,7 @@ jobs:
 
           cd ../front
           docker build -t my-docker-front .
-          docker save my-docker-front -o my-docker-font.tar
+          docker save my-docker-front -o my-docker-front.tar
 
 
       - name: Show Docker images size
@@ -84,7 +84,7 @@ jobs:
             echo "File my-docker-front already exists in S3. Downloading..."
           else
             echo "File my-docker-front does not exist in S3. Uploading..."
-            aws s3 cp ./back/my-docker-front.tar s3://myappconfig/my-docker-front.tar
+            aws s3 cp ./front/my-docker-front.tar s3://myappconfig/my-docker-front.tar
           fi
 
 
@@ -135,7 +135,7 @@ jobs:
               exit 1
             fi
                         
-            if [ ! -f /home/ubuntu/my-docker-back.tar ]; then
+            if [ ! -f /home/ubuntu/my-docker-front.tar ]; then
               echo "File does not exist. Downloading..."
               
               AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} \
@@ -164,7 +164,7 @@ jobs:
             # Run Docker Front load inside the EC2 instance
             sudo docker load -i /home/ubuntu/my-docker-front.tar
             # Optional: Start the container after loading the image
-            sudo docker rm my-back-container || true
+            sudo docker rm my-front-container || true
             sudo docker run -d --name my-front-container -p 4040:4040 my-docker-front:latest
           EOF
       
