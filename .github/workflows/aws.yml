@@ -155,17 +155,30 @@ jobs:
           # Run Docker Back load inside the EC2 instance
           ssh -o StrictHostKeyChecking=no -i private-key.pem ubuntu@ec2-3-39-65-164.ap-northeast-2.compute.amazonaws.com << 'EOF'
             sudo docker load -i /home/ubuntu/my-docker-back.tar
-            # Optional: Start the container after loading the image
-            sudo docker rm my-back-container || true
-            sudo docker run -d --name my-back-container -p 4040:4040 my-docker-back:latest
+          
+          # Check if container already exists
+            if sudo docker ps -a --filter "name=my-back-container" --format '{{.Names}}' | grep -w "my-back-container" > /dev/null; then
+              echo "Container 'my-back-container' already exists. Restarting the container."
+              sudo docker start my-back-container || echo "Failed to start the container."
+            else
+              echo "Container 'my-back-container' does not exist. Creating and running a new container."
+              sudo docker run -d --name my-back-container -p 4040:4040 my-docker-back:latest
+            fi
           EOF
+
 
           # Run Docker Front load inside the EC2 instance
           ssh -o StrictHostKeyChecking=no -i private-key.pem ubuntu@ec2-13-125-36-149.ap-northeast-2.compute.amazonaws.com << 'EOF'
             sudo docker load -i /home/ubuntu/my-docker-front.tar
-            # Optional: Start the container after loading the image
-            sudo docker rm my-front-container || true
-            sudo docker run -d --name my-front-container -p 4040:4040 my-docker-front:latest
+
+          # Check if container already exists
+            if sudo docker ps -a --filter "name=my-front-container" --format '{{.Names}}' | grep -w "my-front-container" > /dev/null; then
+              echo "Container 'my-front-container' already exists. Restarting the container."
+              sudo docker start my-front-container || echo "Failed to start the container."
+            else
+              echo "Container 'my-front-container' does not exist. Creating and running a new container."
+              sudo docker run -d --name my-front-container -p 80:80 my-docker-front:latest
+            fi
           EOF
       
           
