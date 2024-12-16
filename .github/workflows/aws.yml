@@ -64,7 +64,7 @@ jobs:
           docker images my-docker-front --format "{{.Size}}"
 
 
-      - name: Setting Uploading Docker images to S3
+      - name: Upload Docker image to S3
         run: |
           echo "${{ secrets.AWS_SSH_PRIVATE_KEY }}" > private-key.pem
           chmod 600 private-key.pem
@@ -72,10 +72,7 @@ jobs:
           aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws configure set region ap-northeast-2
-
           
-      - name: Check if Docker image exists in S3
-        run: |
           if aws s3 ls s3://myappconfig/my-docker-back.tar > /dev/null; then
             echo "File my-docker-back already exists in S3. Downloading..."
           else
