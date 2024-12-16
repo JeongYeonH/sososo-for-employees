@@ -89,7 +89,7 @@ public class WebSecurityConfig implements WebSocketMessageBrokerConfigurer{
 
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.addAllowedOrigin(frontendServer);
-        corsConfiguration.addAllowedOrigin("http://13.125.36.149");
+        corsConfiguration.addAllowedOrigin("http://localhost:3000");
         corsConfiguration.addAllowedMethod("*");
         corsConfiguration.addAllowedHeader("*");
         corsConfiguration.setAllowCredentials(true);
