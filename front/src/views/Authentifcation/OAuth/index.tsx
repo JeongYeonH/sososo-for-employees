@@ -18,7 +18,6 @@ export default function OAuth() {
         setCookie('accessToken', token, {expires, path: '/' });
         
         navigate('/');
-        window.location.reload();
 
     }, [token]);
     return (
