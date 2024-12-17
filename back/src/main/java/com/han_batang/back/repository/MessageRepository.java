@@ -9,6 +9,6 @@ import com.han_batang.back.entity.JoinChatEntity;
 import com.han_batang.back.entity.MessageEntity;
 
 public interface MessageRepository extends JpaRepository<MessageEntity, Integer>{
-    List<MessageEntity> findByJoinChatEntityChatGeneratedIdIn(List<Integer> chatGeneratedIds);
+    List<MessageEntity> findByJoinChatEntityChatGeneratedIdInOrderByMessageSentTimeAsc(List<Integer> chatGeneratedIds);
     Optional<MessageEntity> findFirstByJoinChatEntityInOrderByMessageSentTimeDesc(List<JoinChatEntity> joinChatEntities);
 }
