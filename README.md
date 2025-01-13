@@ -19,7 +19,7 @@
 ***
 
 ## **서비스 샘플 화면**
-![homepage](https://github.com/user-attachments/assets/749b67f1-7b1f-4fdf-ba6b-1c7e1c25ac64)
+![homepage](https://github.com/user-attachments/assets/2961aa51-0f0f-444a-82b0-40ec291db1e1)
 **홈 페이지 화면**: 카드 형태로 각 소모임이 display된 것을 확인 가능
 ***
 
