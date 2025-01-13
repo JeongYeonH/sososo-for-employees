@@ -19,12 +19,25 @@
 ***
 
 ## **서비스 샘플 화면**
-![homepage](https://github.com/user-attachments/assets/2961aa51-0f0f-444a-82b0-40ec291db1e1)
-**홈 페이지 화면**: 카드 형태로 각 소모임이 display된 것을 확인 가능
+![homepage](https://github.com/user-attachments/assets/2961aa51-0f0f-444a-82b0-40ec291db1e1) <br>
+**홈 페이지 화면**: 카드 형태로 각 소모임이 display된 것을 확인 가능 <br><br>
+
+![userpage](https://github.com/user-attachments/assets/64e1051f-6bcd-4d9e-8774-618e79492549) <br>
+**유저 페이지 화면**: 카드 형태로 가입한/생성한 소모임 list, 그리고 메시지 알람 list <br><br>
+
+![clubpage](https://github.com/user-attachments/assets/2c663b7f-1cc8-4a28-a3d4-752f9112f79f) <br>
+**소모임 페이지 화면**: 소모임 클릭시 진입, 소모임 정보/호스트/회원 list 조회 가능 <br><br>
+
+![chatpage](https://github.com/user-attachments/assets/a1325ca3-6169-4c70-82a8-e94744945039) <br>
+**채팅 페이지 화면**: 좌측의 각 채팅방을 클릭하여 소모임 회원과 실시간 소통이 가능 <br><br>
 ***
 
 ## **서비스 아키텍처**
+**erd 설계**
+![erdcloudsososo](https://github.com/user-attachments/assets/e573bc36-e7d8-402e-bc7c-839a5ef254aa) <br><br>
 
+**아키텍처**
+![sososoarchitect](https://github.com/user-attachments/assets/bf16ad8b-b0f8-40a3-ba45-0acb2d24c20b)
 ***
 
 ## **기술적 의사결정**
