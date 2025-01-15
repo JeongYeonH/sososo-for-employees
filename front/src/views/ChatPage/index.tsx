@@ -16,6 +16,9 @@ import { ResponseBody } from "types";
 import { ResponseCode } from "types/enums";
 import './style.css'
 import { useLocation } from "react-router-dom";
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 export function JoinChatPage() {
 
@@ -80,7 +83,7 @@ export function JoinChatPage() {
 
     useEffect(() => {
         const notificationClient = new Client({
-            webSocketFactory: () => new SockJS("http://3.39.65.164:4040/api/v1/user/chat"),
+            webSocketFactory: () => new SockJS("http://localhost:4040/api/v1/user/chat"),
             onConnect: () => {
                 //console.log("Notification WebSocket connected!");
                 notificationClient.subscribe(`/room/notifications/${userId}`, (message) => {
@@ -135,7 +138,7 @@ export function JoinChatPage() {
         const client = new Client({
             
             webSocketFactory: () => 
-                new SockJS(`http://3.39.65.164:4040/api/v1/user/chat?Authorization=Bearer ${token}&roomId=${chatRoom.chatRoomId.toString()}`),
+                new SockJS(`http://localhost:4040/api/v1/user/chat?Authorization=Bearer ${token}&roomId=${chatRoom.chatRoomId.toString()}`),
             connectHeaders:{},
             onConnect: () => {
                 // console.log("WebSocket connected!");     
