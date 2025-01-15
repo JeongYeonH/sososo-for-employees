@@ -7,6 +7,9 @@ import CreateUserInfoRequestDto from "./request/user/create-user-info.request.dt
 import CreateUserInfoResponseDto from "./response/user/create-user-info.response.dto";
 import { ResponseDto } from "./response";
 import ShowClubListCategoryRequestDto from "./request/club/show-club-list-category.request.dto";
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const responseHandler = <T>(response: AxiosResponse<any, any>) => {
     const responseBody: T = response.data;
@@ -19,7 +22,7 @@ const errorHandler = (error: any) => {
     return responseBody;
 }
 
-const DOMAIN = 'http://3.39.65.164:4040';
+const DOMAIN = 'http://localhost:4040';
 const API_DOMAIN = `${DOMAIN}/api/v1`;
 
 export const SNS_SIGN_IN_URL = (type: 'kakao' | 'google') => `${API_DOMAIN}/auth/oauth2/${type}`;
