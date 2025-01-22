@@ -107,43 +107,39 @@ public class ClubServiceImplement implements ClubService{
     @Transactional
     public ResponseEntity<? super JoinClubResponseDto> joinClub(JoinClubRequestDto dto, String userId) {
         
-        try{
-            if(userId.isEmpty()) return JoinClubResponseDto.notLoggedIn();
+        if(userId.isEmpty()) return JoinClubResponseDto.notLoggedIn();
 
-            Integer clubId = dto.getClubId();
+        Integer clubId = dto.getClubId();
 
-            Optional<ClubMemberEntity> clubMemberEntity 
-            = clubMemberRepository.findByClubEntityClubIdAndUserEntityUserId(clubId, userId);
+        Optional<ClubMemberEntity> clubMemberEntity 
+        = clubMemberRepository.findByClubIdNUserId(clubId, userId);
 
-            boolean isAdmin = clubMemberEntity.map(ClubMemberEntity::isAdmin).orElse(false);
-            System.out.println(isAdmin);
-            if(!isAdmin){
-                return JoinClubResponseDto.notAClubHost();
-            } 
-                     
-            String joinerUserId = dto.getJoinerUserId();
-            Optional<ClubMemberEntity> existingClubMemberEntity 
-            = clubMemberRepository.findByClubEntityClubIdAndUserEntityUserId(clubId, joinerUserId);
-            if(existingClubMemberEntity.isPresent()) return JoinClubResponseDto.alreayExist();
+        boolean isAdmin = clubMemberEntity.map(ClubMemberEntity::isAdmin).orElse(false);
+        System.out.println(isAdmin);
+        if(!isAdmin){
+            return JoinClubResponseDto.notAClubHost();
+        } 
+                    
+        String joinerUserId = dto.getJoinerUserId();
+        Optional<ClubMemberEntity> existingClubMemberEntity 
+        = clubMemberRepository.findByClubIdNUserId(clubId, joinerUserId);
+        if(existingClubMemberEntity.isPresent()) return JoinClubResponseDto.alreayExist();
 
-            UserEntity userEntity = userRepository.findByUserId(joinerUserId);
-            Optional<ClubEntity> clubEntityOptional = clubRepository.findById(clubId);
-            ClubEntity clubEntity = clubEntityOptional.orElseThrow();
-            
-            Integer clubMemeberNum = clubEntity.getClub_current_member_num();
-            clubEntity.setClub_current_member_num(clubMemeberNum + 1);
-            clubRepository.save(clubEntity);
+        UserEntity userEntity = userRepository.findByUserId(joinerUserId);
+        Optional<ClubEntity> clubEntityOptional = clubRepository.findById(clubId);
+        ClubEntity clubEntity = clubEntityOptional.orElseThrow();
+        
+        Integer clubMemeberNum = clubEntity.getClub_current_member_num();
+        clubEntity.setClub_current_member_num(clubMemeberNum + 1);
+        clubRepository.save(clubEntity);
 
-            ClubMemberEntity savedClubMemberEntity 
-            = new ClubMemberEntity(dto, clubEntity, userEntity);
-            clubMemberRepository.save(savedClubMemberEntity);
+        ClubMemberEntity savedClubMemberEntity 
+        = new ClubMemberEntity(dto, clubEntity, userEntity);
+        clubMemberRepository.save(savedClubMemberEntity);
 
-            chatService.joinChatRoom(joinerUserId, clubId);
+        chatService.joinChatRoom(joinerUserId, clubId);
 
-        }catch(Exception exception){
-            exception.printStackTrace();
-            return null;
-        }
+
 
         return JoinClubResponseDto.success();
     }

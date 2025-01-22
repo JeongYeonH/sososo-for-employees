@@ -127,7 +127,7 @@ public class ChatController {
         return response;
     }
 
-    @GetMapping("/api/v1/user/join-chat-invitation/{roomName}")
+    @GetMapping("/api/v1/user/chat/join-chat-invitation/{roomName}")
     public ResponseEntity<?> joinChatInvitation(
         @PathVariable String roomName
     ){
