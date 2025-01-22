@@ -49,6 +49,10 @@ public class WebSecurityConfig implements WebSocketMessageBrokerConfigurer{
     @Value("${front-end-url}")
     private String frontendServer;
     
+    @Value("${front-end-test-url}")
+    private String frontendTestServer;
+ 
+    
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
@@ -89,7 +93,7 @@ public class WebSecurityConfig implements WebSocketMessageBrokerConfigurer{
 
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.addAllowedOrigin(frontendServer);
-        corsConfiguration.addAllowedOrigin("http://localhost:3000");
+        corsConfiguration.addAllowedOrigin(frontendTestServer);
         corsConfiguration.addAllowedMethod("*");
         corsConfiguration.addAllowedHeader("*");
         corsConfiguration.setAllowCredentials(true);
@@ -109,7 +113,7 @@ public class WebSecurityConfig implements WebSocketMessageBrokerConfigurer{
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry){
         registry.addEndpoint("/api/v1/user/chat", "/api/v1/user/notifications")
-        .setAllowedOrigins(frontendServer)
+        .setAllowedOrigins(frontendTestServer)
         .addInterceptors(new WebSocketHandshakeInterceptor())
         .withSockJS();
     }
