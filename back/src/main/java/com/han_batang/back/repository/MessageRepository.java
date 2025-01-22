@@ -22,6 +22,13 @@ public interface MessageRepository extends JpaRepository<MessageEntity, Integer>
     List<MessageEntity> findMessageList(@Param("chatGeneratedIds")List<Integer> chatGeneratedIds);
     
     
-    
-    Optional<MessageEntity> findFirstByJoinChatEntityInOrderByMessageSentTimeDesc(List<JoinChatEntity> joinChatEntities);
+    @Query(value = """
+            select m
+            from message m
+            join join_chat jc ON jc.chatGeneratedId = m.joinChatEntity.chatGeneratedId
+            WHERE jc IN :joinChatEntities 
+            ORDER BY m.messageSentTime DESC
+            FETCH FIRST 1 ROWS ONLY
+            """)
+    Optional<MessageEntity> findFirstMessage(@Param("joinChatEntities") List<JoinChatEntity> joinChatEntities);
 }

@@ -68,7 +68,9 @@ public class WebSecurityConfig implements WebSocketMessageBrokerConfigurer{
                 .requestMatchers("/", "/api/v1/auth/**", "/oauth2/**").permitAll()
                 .requestMatchers("/api/v1/response/**").permitAll()
                 .requestMatchers("/api/v1/s3/**").permitAll()
-                .requestMatchers("/api/v1/user/chat/**", "/api/v1/user/notifications").permitAll()
+                .requestMatchers("/api/v1/user/chat/**"
+                                            , "/api/v1/user/notifications"
+                                ).permitAll()
                 .requestMatchers("/api/v1/user/**").authenticated()
                 .anyRequest().authenticated()
             )

@@ -125,7 +125,7 @@ public class ChatServiceImplement implements ChatService{
                     Integer chatRoomId = chatRoom.getChatRoomId();
                     List<JoinChatEntity> joinChatEntities = joinChatRepository.findByChatRoomEntityChatRoomId(chatRoomId);
                     Optional<MessageEntity> newestMessageOp
-                    = messageRepository.findFirstByJoinChatEntityInOrderByMessageSentTimeDesc(joinChatEntities);                               
+                    = messageRepository.findFirstMessage(joinChatEntities);                               
                     MessageEntity messageEntity = newestMessageOp.orElse(null);
                     return new ChatRoomDto(chatRoom, optionalClub.get(), null, messageEntity);                   
                 })
@@ -151,7 +151,7 @@ public class ChatServiceImplement implements ChatService{
                 }              
                 Optional<JoinChatEntity> joinChatEntity 
                 = joinChatRepository
-                .findByChatRoomEntityAndUserEntity(chatRoomEntity, userEntity);
+                .findByChatRoomNUser(chatRoomEntity, userEntity);
 
                 if(joinChatEntity.isPresent()){
                     return ResponseEntity.ok(joinChatEntity.get());

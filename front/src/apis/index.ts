@@ -49,7 +49,7 @@ const NOTIFICATION_IS_READ = (notificationId: any) => `${API_DOMAIN}/response/me
 const SHOW_CHAT_ROOM_LIST_BY_USER = () => `${API_DOMAIN}/user/show-chat-room`;
 const GET_GENERATED_ID = (roomId: any) => `${API_DOMAIN}/user/get-join-chat/${roomId}`;
 const SHOW_MESSAGE_LIST_BY_ROOM_ID = (roomId: any) => `${API_DOMAIN}/user/show-message-list/${roomId}`;
-const CLUB_INVITEMENT_REQUEST = (roomName: string) => `${API_DOMAIN}/user/join-chat-invitation/${roomName}`;
+const CLUB_INVITEMENT_REQUEST = (roomName: string) => `${API_DOMAIN}/user/chat/join-chat-invitation/${roomName}`;
 
 
 export const signInRequest = async (requestBody: SignInRequestDto) => {
