@@ -204,7 +204,7 @@ public class ChatServiceImplement implements ChatService{
                 .collect(Collectors.toList());
             
             List<MessageEntity> messageEntities 
-            = messageRepository.findByJoinChatEntityChatGeneratedIdInOrderByMessageSentTimeAsc(chatGeneratedIds);
+            = messageRepository.findMessageList(chatGeneratedIds);
                      
             List<MessageDto> messageDtos = new ArrayList<>();
             

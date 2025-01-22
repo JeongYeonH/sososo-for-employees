@@ -18,7 +18,6 @@ import './style.css'
 import { useLocation } from "react-router-dom";
 import dotenv from 'dotenv';
 
-dotenv.config();
 
 export function JoinChatPage() {
 

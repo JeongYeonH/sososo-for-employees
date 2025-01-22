@@ -9,8 +9,6 @@ import { ResponseDto } from "./response";
 import ShowClubListCategoryRequestDto from "./request/club/show-club-list-category.request.dto";
 import dotenv from 'dotenv';
 
-dotenv.config();
-
 const responseHandler = <T>(response: AxiosResponse<any, any>) => {
     const responseBody: T = response.data;
     return responseBody;
