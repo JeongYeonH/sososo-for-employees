@@ -29,7 +29,18 @@ public interface JoinChatRepository extends JpaRepository<JoinChatEntity, Intege
         @Param("userEntity") UserEntity userEntity
     );
     
-    Optional<JoinChatEntity> findByChatRoomEntityInAndUserEntity(List<ChatRoomEntity> chatRoomEntity, UserEntity userEntity);
+    @Query(value = """
+            SELECT jc
+            FROM join_chat jc
+            JOIN jc.chatRoomEntity cr 
+            JOIN jc.userEntity u
+            WHERE cr IN :chatRoomEntities
+              AND u = :userEntity
+        """)
+    Optional<JoinChatEntity> findExistChatRoom(
+      @Param("chatRoomEntities") List<ChatRoomEntity> chatRoomEntity, 
+      @Param("userEntity") UserEntity userEntity
+    );
     JoinChatEntity findByChatGeneratedId(Integer generatedId);
     List<JoinChatEntity> findByChatRoomEntityChatRoomId(Integer chatRoomId);
     JoinChatEntity findByChatRoomEntityAndUserEntity(ChatRoomEntity chatRoomEntity, UserEntity userEntity);

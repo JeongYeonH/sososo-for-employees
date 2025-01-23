@@ -188,7 +188,7 @@ public class ChatServiceImplement implements ChatService{
     @Override
     public Optional<NotificationEntity> getAlreadyStackedNotification(JoinChatEntity joinChatEntity) {
         Optional<NotificationEntity> alreadyStacked 
-        = notificationRepository.findByJoinChatEntityAndIsReadFalse(joinChatEntity);
+        = notificationRepository.findNotification(joinChatEntity);
         return alreadyStacked;
     
     }
@@ -242,7 +242,7 @@ public class ChatServiceImplement implements ChatService{
             .collect(Collectors.toList());
 
             Optional<JoinChatEntity> alreadyInvitedJoinChat
-            = joinChatRepository.findByChatRoomEntityInAndUserEntity(alreadyInvitedChatRoom, userEntity);
+            = joinChatRepository.findExistChatRoom(alreadyInvitedChatRoom, userEntity);
             if(alreadyInvitedJoinChat.isPresent()) {
                 System.out.println("중복 요청");
                 return JoinClubResponseDto.alreayExist();
@@ -253,9 +253,9 @@ public class ChatServiceImplement implements ChatService{
             JoinChatEntity savedJoinChatEntity = chatRoomCreationResponseDto.getJoinChatEntity();
             ChatRoomEntity savedChatRoomEntity = chatRoomCreationResponseDto.getChatRoomEntity();
 
-            ClubMemberEntity clubMemberEntities 
-            = clubMemberRepository.findByClubEntityClubTitleAndIsAdmin(roomName, true);
-            UserEntity hostUserEntity = clubMemberEntities.getUserEntity();
+            ClubMemberEntity clubHostMember 
+            = clubMemberRepository.findHost(roomName);
+            UserEntity hostUserEntity = clubHostMember .getUserEntity();
             UserInfoEntity hostUserInfoEntity = hostUserEntity.getUserInfoEntity();
 
             JoinChatEntity joinChatEntity

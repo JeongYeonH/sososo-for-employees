@@ -147,28 +147,22 @@ public class ClubServiceImplement implements ClubService{
     @Override
     public ResponseEntity<? super ShowClubListResponseDto> showClubList(int page, int size, String type) {
         
-        try{
-
-            Pageable pageable = null;            
-            if("Latest".equals(type)){
-                pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
-            }            
-            if("Popular".equals(type)){
-                pageable = PageRequest.of(page, size, Sort.by("clubPageVisitedNum").descending());
-            }            
-            if(pageable == null){
-                return ShowClubListResponseDto.databaseError();    
-            }       
-            Page<ClubEntity> clubPages = clubRepository.findAll(pageable);          
-            List<ClubDto> clubDtos = getClubDtos(clubPages);
-            
-            ShowClubListResponseDto responseDto = new ShowClubListResponseDto(clubDtos, clubPages.isLast());
-            return ResponseEntity.ok(responseDto);
-
-        }catch(Exception exception){
-            exception.printStackTrace();
-            return null;
-        }
+        Pageable pageable = null;            
+        if("Latest".equals(type)){
+            pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
+        }            
+        if("Popular".equals(type)){
+            pageable = PageRequest.of(page, size, Sort.by("clubPageVisitedNum").descending());
+        }            
+        if(pageable == null){
+            return ShowClubListResponseDto.databaseError();    
+        }       
+        Page<ClubEntity> clubPages = clubRepository.findAll(pageable);          
+        List<ClubDto> clubDtos = getClubDtos(clubPages);
+        
+        ShowClubListResponseDto responseDto = new ShowClubListResponseDto(clubDtos, clubPages.isLast());
+        return ResponseEntity.ok(responseDto);
+  
     }
 
     @Override
