@@ -22,12 +22,16 @@ public interface ClubMemberRepository extends JpaRepository<ClubMemberEntity, In
               AND u.userId = :userId
             """)
     Optional<ClubMemberEntity> findByClubIdNUserId(@Param("clubId")Integer club_id, @Param("userId") String userId);
-    
-    
-    
     List<ClubMemberEntity> findByUserEntityUserId(String userId);
     
-    ClubMemberEntity findByClubEntityClubTitleAndIsAdmin(String clubTitle, boolean isAdmin);
+    @Query(value = """
+        SELECT cm
+        FROM club_member cm
+        JOIN cm.clubEntity c
+        WHERE c.clubTitle = :clubTitle
+          AND isAdmin = true
+        """)
+    ClubMemberEntity findHost(@Param("clubTitle") String clubTitle);
     Optional<ClubMemberEntity> findByClubEntityAndIsAdmin(Optional<ClubEntity> clubEntity, boolean isAdmin);
     List<ClubMemberEntity> findByClubEntityClubId(Integer club_id);
 } 
