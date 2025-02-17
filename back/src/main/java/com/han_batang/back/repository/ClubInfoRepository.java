@@ -9,5 +9,7 @@ import com.han_batang.back.entity.ClubInfoEntity;
 
 @Repository
 public interface ClubInfoRepository extends JpaRepository<ClubInfoEntity, Integer>{
+    
+    
     Optional<ClubInfoEntity> findByClubEntityClubId(Integer clubId);
 }

@@ -66,7 +66,7 @@ public class ChatServiceImplement implements ChatService{
         );
         chatRoomRepository.save(chatRoomEntity);
 
-        Optional<UserInfoEntity> userInfoEntity = userInfoRepository.findByUserEntity_UserId(userId);
+        Optional<UserInfoEntity> userInfoEntity = userInfoRepository.getUserInfo(userId);
 
         JoinChatEntity joinChatEntity
         = new JoinChatEntity(
@@ -232,11 +232,11 @@ public class ChatServiceImplement implements ChatService{
     public ResponseEntity<? super JoinClubResponseDto> joinChatInvitation(String userId, String roomName) {
         try{
             UserEntity userEntity = userRepository.findByUserId(userId);
-            Optional<UserInfoEntity> userInfoEntity = userInfoRepository.findByUserEntity_UserId(userId);
+            Optional<UserInfoEntity> userInfoEntity = userInfoRepository.getUserInfo(userId);
             if(!userInfoEntity.isPresent()) return ResponseEntity.notFound().build();
 
             List<ChatRoomEntity> alreadyInvitedChatRoom = 
-            chatRoomRepository.findByChatRoomName(roomName)
+            chatRoomRepository.getChatRoom(roomName)
             .stream()
             .filter(chatRoom -> chatRoom.getIsForInvitation() == true)
             .collect(Collectors.toList());
@@ -290,7 +290,7 @@ public class ChatServiceImplement implements ChatService{
     @Transactional
     public ResponseEntity<?> joinChatRoom(String joinerUserId, Integer clubId){
         UserEntity JoinerUserEntity = userRepository.findByUserId(joinerUserId);
-        Optional<UserInfoEntity> joinerUserInfoEntity = userInfoRepository.findByUserEntity_UserId(joinerUserId);
+        Optional<UserInfoEntity> joinerUserInfoEntity = userInfoRepository.getUserInfo(joinerUserId);
         Optional<ClubEntity> hasToJoinClubEntity = clubRepository.findById(clubId);
 
         if(!hasToJoinClubEntity.isPresent() ){
@@ -299,7 +299,7 @@ public class ChatServiceImplement implements ChatService{
 
         String clubName = hasToJoinClubEntity.get().getClubTitle();
         Optional<ChatRoomEntity> hasToJoinChatRoomEntity 
-        = chatRoomRepository.findByChatRoomName(clubName)
+        = chatRoomRepository.getChatRoom(clubName)
             .stream()
             .filter(chatRoom -> !chatRoom.getIsForInvitation())
             .findFirst();

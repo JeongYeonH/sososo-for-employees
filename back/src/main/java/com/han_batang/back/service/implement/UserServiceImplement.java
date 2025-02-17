@@ -84,7 +84,7 @@ public class UserServiceImplement implements UserService{
     public ResponseEntity<? super ShowUserInfoResponseDto> showUserInfo(String userId) {
         
         try{
-            Optional<UserInfoEntity> userInfoEntity = userInfoRepository.findByUserEntity_UserId(userId);
+            Optional<UserInfoEntity> userInfoEntity = userInfoRepository.getUserInfo(userId);
             UserEntity userEntity = userRepository.findByUserId(userId);
             if(userInfoEntity.isPresent()){
                 ShowUserInfoResponseDto responseDto = new ShowUserInfoResponseDto(userEntity, userInfoEntity.get());
