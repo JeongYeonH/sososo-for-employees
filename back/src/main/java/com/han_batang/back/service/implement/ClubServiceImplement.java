@@ -228,7 +228,7 @@ public class ClubServiceImplement implements ClubService{
                 club.increaseVisitedNum();
                 clubRepository.save(club);
 
-                Optional<ClubInfoEntity> clubInfoEntity = clubInfoRepository.findByClubEntityClubId(clubId);
+                Optional<ClubInfoEntity> clubInfoEntity = clubInfoRepository.getClubInfo(clubId);
                 ClubDto clubDto = new ClubDto(club, clubInfoEntity);
                 ShowClubDetailResponseDto responseDto = new ShowClubDetailResponseDto(clubDto);
                 return ResponseEntity.ok(responseDto);
@@ -298,7 +298,7 @@ public class ClubServiceImplement implements ClubService{
         for(ClubEntity clubEntity : clubPages){
             Integer clubId = clubEntity.getClubId();
             Optional<ClubInfoEntity> clubInfoEntity 
-            = clubInfoRepository.findByClubEntityClubId(clubId);
+            = clubInfoRepository.getClubInfo(clubId);
             ClubDto clubDto = new ClubDto(clubEntity, clubInfoEntity);
             clubDtos.add(clubDto);
         }
