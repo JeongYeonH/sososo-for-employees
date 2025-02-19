@@ -114,7 +114,7 @@ public class UserServiceImplement implements UserService{
             for(ClubEntity clubEntity : clubEntities){
                 Integer clubId = clubEntity.getClubId();
                 Optional<ClubInfoEntity> clubInfoEntity 
-                = clubInfoRepository.findByClubEntityClubId(clubId);
+                = clubInfoRepository.getClubInfo(clubId);
                 ClubDto clubDto = new ClubDto(clubEntity, clubInfoEntity);
                 clubDtos.add(clubDto);
             }
@@ -144,7 +144,7 @@ public class UserServiceImplement implements UserService{
             for(ClubEntity clubEntity : clubEntities){
                 Integer clubId = clubEntity.getClubId();
                 Optional<ClubInfoEntity> clubInfoEntity 
-                = clubInfoRepository.findByClubEntityClubId(clubId);
+                = clubInfoRepository.getClubInfo(clubId);
                 ClubDto clubDto = new ClubDto(clubEntity, clubInfoEntity);
                 clubDtos.add(clubDto);
             }

@@ -123,7 +123,7 @@ public class ChatServiceImplement implements ChatService{
                     Optional<ClubEntity> optionalClub = clubRepository.findByClubTitle(chatRoomName); 
                     
                     Integer chatRoomId = chatRoom.getChatRoomId();
-                    List<JoinChatEntity> joinChatEntities = joinChatRepository.findByChatRoomEntityChatRoomId(chatRoomId);
+                    List<JoinChatEntity> joinChatEntities = joinChatRepository.getJoinChats(chatRoomId);
                     Optional<MessageEntity> newestMessageOp
                     = messageRepository.findFirstMessage(joinChatEntities);                               
                     MessageEntity messageEntity = newestMessageOp.orElse(null);
@@ -197,7 +197,7 @@ public class ChatServiceImplement implements ChatService{
     @Override
     public ResponseEntity<? super ShowMessageListResponseDto> showMessageListByRoom(Integer roomId) {
         try{
-            List<JoinChatEntity> joinChatEntities = joinChatRepository.findByChatRoomEntityChatRoomId(roomId);
+            List<JoinChatEntity> joinChatEntities = joinChatRepository.getJoinChats(roomId);
             
             List<Integer> chatGeneratedIds = joinChatEntities.stream()
                 .map(JoinChatEntity::getChatGeneratedId)
@@ -325,7 +325,7 @@ public class ChatServiceImplement implements ChatService{
 
     @Override
     public List<UserEntity> findAllUsersByRoomId(Integer roomId) {
-        List<JoinChatEntity> joinChatEntities = joinChatRepository.findByChatRoomEntityChatRoomId(roomId);
+        List<JoinChatEntity> joinChatEntities = joinChatRepository.getJoinChats(roomId);
         List<UserEntity> users = joinChatEntities.stream()
             .map(JoinChatEntity::getUserEntity)
             .collect(Collectors.toList());
