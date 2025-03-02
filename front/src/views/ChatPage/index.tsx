@@ -1,5 +1,5 @@
 import { getGeneratedId, joinClubRequest, showAllUserInfoByClub, showChatRoomByUser, showMessagesByRoomId, showUserInfoRequest } from "apis";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import SockJS from "sockjs-client";
 import { Client, Stomp } from "@stomp/stompjs";
 import { getCookie } from "utils";
@@ -75,19 +75,20 @@ export function JoinChatPage() {
         fetchClubData();
     },[location])
 
+    // 채팅 방 접속 시, 메시지 추가 시 메시지 바가 아래로 스크롤 됩니다
+    const chatFrameRef = useRef<HTMLDivElement | null>(null);
     useEffect(()=>{
-
-
-    },[])
+        if (chatFrameRef.current) {
+            chatFrameRef.current.scrollTop = chatFrameRef.current.scrollHeight;
+        }
+    }, [messages])
 
     useEffect(() => {
         const notificationClient = new Client({
             webSocketFactory: () => new SockJS("http://localhost:4040/api/v1/user/chat"),
             onConnect: () => {
-                //console.log("Notification WebSocket connected!");
                 notificationClient.subscribe(`/room/notifications/${userId}`, (message) => {
                     const notification = JSON.parse(message.body);
-                    //console.log("알림 수신:", notification.content);
                 });
             },
             onStompError: (frame) => {
@@ -140,8 +141,6 @@ export function JoinChatPage() {
                 new SockJS(`http://localhost:4040/api/v1/user/chat?Authorization=Bearer ${token}&roomId=${chatRoom.chatRoomId.toString()}`),
             connectHeaders:{},
             onConnect: () => {
-                // console.log("WebSocket connected!");     
-                // console.log(`Bearer ${token}`)  
                 client.subscribe(`/room/${chatRoom.chatRoomId}`, (message)=>{
                     setMessages(
                         (prevMessages) => [
@@ -341,7 +340,7 @@ export function JoinChatPage() {
                             <HiBars3 />
                         </div>
                     </div>
-                    <div className="chat-room-chat-frame">
+                    <div className="chat-room-chat-frame" ref={chatFrameRef}>
                         {messages.map((msg, index)=>(
                             <div className="chat-room-chat-comment-card" key={index}>
                                 <div className="chat-room-chat-comment-img">
