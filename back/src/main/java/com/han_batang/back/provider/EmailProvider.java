@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import org.springframework.lang.NonNull;
 
 @Component
 @RequiredArgsConstructor
@@ -14,13 +15,17 @@ public class EmailProvider {
 
     private final String SUBJECT = "[한바탕 회원 서비스] 인증메일입니다.";
 
-    public boolean sendCertificationMail(String email, String certificationNumber){
+    public boolean sendCertificationMail(@NonNull String email, @NonNull String certificationNumber){
 
         try{
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper messageHelper = new MimeMessageHelper(message, true);            
         
             String htmlContent = getCertificationMessage(certificationNumber);
+
+            if(htmlContent == null){
+                return false;
+            }
 
             messageHelper.setTo(email);
             messageHelper.setSubject(SUBJECT);

@@ -8,9 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HttpBasicConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -34,6 +32,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.lang.NonNull;
 
 @Configurable
 @Configuration
@@ -107,13 +106,13 @@ public class WebSecurityConfig implements WebSocketMessageBrokerConfigurer{
     }
     
     @Override
-    public void configureMessageBroker(MessageBrokerRegistry registry){
+    public void configureMessageBroker(@NonNull MessageBrokerRegistry registry){
         registry.setApplicationDestinationPrefixes("/room");
         registry.enableSimpleBroker("/room");
     }
     
     @Override
-    public void registerStompEndpoints(StompEndpointRegistry registry){
+    public void registerStompEndpoints(@NonNull StompEndpointRegistry registry){
         registry.addEndpoint("/api/v1/user/chat", "/api/v1/user/notifications")
         .setAllowedOrigins(frontendTestServer)
         .addInterceptors(new WebSocketHandshakeInterceptor())

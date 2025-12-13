@@ -40,6 +40,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -110,6 +111,10 @@ public class ClubServiceImplement implements ClubService{
         if(userId.isEmpty()) return JoinClubResponseDto.notLoggedIn();
 
         Integer clubId = dto.getClubId();
+
+        if(clubId == null){
+            return JoinClubResponseDto.notAClubHost();
+        }
 
         Optional<ClubMemberEntity> clubMemberEntity 
         = clubMemberRepository.findByClubIdNUserId(clubId, userId);
@@ -219,7 +224,7 @@ public class ClubServiceImplement implements ClubService{
 
     @Override
     @Transactional
-    public ResponseEntity<? super ShowClubDetailResponseDto> showClubByClubId(Integer clubId) {
+    public ResponseEntity<? super ShowClubDetailResponseDto> showClubByClubId(@NonNull Integer clubId) {
         
         try{
             Optional<ClubEntity> clubEntity = clubRepository.findById(clubId);
@@ -244,7 +249,7 @@ public class ClubServiceImplement implements ClubService{
 
 
     @Override
-    public ResponseEntity<? super ShowUserInfoResponseDto> showHostUserInfoByClubId(Integer clubId) {
+    public ResponseEntity<? super ShowUserInfoResponseDto> showHostUserInfoByClubId(@NonNull Integer clubId) {
         try{
             Optional<ClubEntity> clubEntity = clubRepository.findById(clubId);
             if(!clubEntity.isPresent()) return ShowUserInfoResponseDto.noData();
