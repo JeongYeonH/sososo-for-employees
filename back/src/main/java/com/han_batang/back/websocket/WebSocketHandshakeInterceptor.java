@@ -3,21 +3,21 @@ package com.han_batang.back.websocket;
 import java.util.Map;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.HandshakeInterceptor;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 @Component
 public class WebSocketHandshakeInterceptor implements HandshakeInterceptor {
 
     @Override
     public boolean beforeHandshake(
-        ServerHttpRequest request, 
-        ServerHttpResponse response, 
-        WebSocketHandler wsHandler, 
-        Map<String, Object> attributes
+        @NonNull ServerHttpRequest request, 
+        @NonNull ServerHttpResponse response, 
+        @NonNull WebSocketHandler wsHandler, 
+        @NonNull Map<String, Object> attributes
     ) throws Exception {
         String authHeader = null;
         String roomId = null;
@@ -50,10 +50,10 @@ public class WebSocketHandshakeInterceptor implements HandshakeInterceptor {
 
     @Override
     public void afterHandshake(
-        ServerHttpRequest request,
-        ServerHttpResponse response,
-        WebSocketHandler wsHandler,
-        Exception exception
+        @NonNull ServerHttpRequest request,
+        @NonNull ServerHttpResponse response,
+        @NonNull WebSocketHandler wsHandler,
+        @Nullable Exception exception
     ) {
         System.out.println("Handshake completed");
     }

@@ -44,6 +44,11 @@ public class AuthServiceImplement implements AuthService{
           try{
 
                String userId = dto.getId();
+
+               if(userId == null){
+                    return null;
+               }
+
                boolean isExistId = userRepository.existsById((userId));
                if(isExistId) return IdCheckResponseDto.duplicateId();
 
@@ -66,6 +71,8 @@ public class AuthServiceImplement implements AuthService{
                if(isExistId) return EmailCertificationResponseDto.duplicatedId();
 
                String certificationNumber = CertificationNumber.getCertificationNumber();
+               if(certificationNumber == null) return EmailCertificationResponseDto.mailSendFail();
+               if(email == null) return EmailCertificationResponseDto.mailSendFail();
 
                boolean isSuccessed = emailProvider.sendCertificationMail(email, certificationNumber);
                if(!isSuccessed) return EmailCertificationResponseDto.mailSendFail();

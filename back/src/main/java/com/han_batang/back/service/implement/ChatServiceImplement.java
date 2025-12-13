@@ -37,6 +37,7 @@ import com.han_batang.back.service.ChatService;
 
 
 import jakarta.transaction.Transactional;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -102,7 +103,7 @@ public class ChatServiceImplement implements ChatService{
     }
 
     @Override
-    public void saveNotification(NotificationEntity notificationEntity) {
+    public void saveNotification(@NonNull NotificationEntity notificationEntity) {       
         notificationRepository.save(notificationEntity);
     }
 
@@ -142,7 +143,7 @@ public class ChatServiceImplement implements ChatService{
     }
 
     @Override
-    public ResponseEntity<?> getJoinChatRoomByUser(String userId, Integer roomId) {
+    public ResponseEntity<?> getJoinChatRoomByUser(String userId, @NonNull Integer roomId) {
         try{
                 UserEntity userEntity = userRepository.findByUserId(userId);
                 Optional<ChatRoomEntity> chatRoomEntity = chatRoomRepository.findById(roomId);
@@ -177,7 +178,7 @@ public class ChatServiceImplement implements ChatService{
     }
 
     @Override
-    public void saveMessage(MessageEntity messageEntity) {
+    public void saveMessage(@NonNull MessageEntity messageEntity) {
         try{
             messageRepository.save(messageEntity);
         }catch(Exception exception){
@@ -288,7 +289,7 @@ public class ChatServiceImplement implements ChatService{
 
     @Override
     @Transactional
-    public ResponseEntity<?> joinChatRoom(String joinerUserId, Integer clubId){
+    public ResponseEntity<?> joinChatRoom(String joinerUserId, @NonNull Integer clubId){
         UserEntity JoinerUserEntity = userRepository.findByUserId(joinerUserId);
         Optional<UserInfoEntity> joinerUserInfoEntity = userInfoRepository.getUserInfo(joinerUserId);
         Optional<ClubEntity> hasToJoinClubEntity = clubRepository.findById(clubId);

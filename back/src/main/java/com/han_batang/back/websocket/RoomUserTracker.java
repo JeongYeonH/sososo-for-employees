@@ -1,13 +1,11 @@
 package com.han_batang.back.websocket;
 
-import java.util.ArrayList;
-import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
-import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionConnectEvent;
@@ -26,12 +24,18 @@ public class RoomUserTracker {
     @EventListener
     public void handleWebSocketConnectListener(SessionConnectEvent event) {
         SimpMessageHeaderAccessor headerAccessor = SimpMessageHeaderAccessor.wrap(event.getMessage());
-        String authHeader = (String) headerAccessor.getSessionAttributes().get("Authorization");
-        String roomId = (String) headerAccessor.getSessionAttributes().get("roomId");
-        if (authHeader == null) {
-            System.out.println("Authorization header is null.");
-        }
-        authHeader = authHeader.substring(7);
+        String authHeader = Optional.ofNullable(headerAccessor.getSessionAttributes())
+            .map(attributes -> attributes.get("Authorization")) 
+            .filter(String.class::isInstance) 
+            .map(String.class::cast) 
+            .orElse(null);
+        String roomId = Optional.ofNullable(headerAccessor.getSessionAttributes())
+            .map(attributes -> attributes.get("roomId"))
+            .filter(String.class::isInstance)
+            .map(String.class::cast)
+            .orElse(null);
+        
+               authHeader = authHeader.substring(7);
         String userId = jwtProvider.validate(authHeader);
         if (roomId != null && userId != null) {
             roomUserMap.computeIfAbsent(roomId, k -> ConcurrentHashMap.newKeySet()).add(userId);
@@ -45,9 +49,18 @@ public class RoomUserTracker {
     @EventListener
     public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
         SimpMessageHeaderAccessor headerAccessor = SimpMessageHeaderAccessor.wrap(event.getMessage());
-        String roomId = (String) headerAccessor.getSessionAttributes().get("roomId");
-        String authHeader = (String) headerAccessor.getSessionAttributes().get("Authorization");
-        authHeader = authHeader.substring(7);
+        String authHeader = Optional.ofNullable(headerAccessor.getSessionAttributes())
+            .map(attributes -> attributes.get("Authorization")) 
+            .filter(String.class::isInstance) 
+            .map(String.class::cast) 
+            .orElse(null);
+        String roomId = Optional.ofNullable(headerAccessor.getSessionAttributes())
+            .map(attributes -> attributes.get("roomId"))
+            .filter(String.class::isInstance)
+            .map(String.class::cast)
+            .orElse(null);
+        
+               authHeader = authHeader.substring(7);
         String userId = jwtProvider.validate(authHeader);      
         System.out.println("디스커넥트 리스너 실행.");
         System.out.println("해제될 룸 아이디: " + roomId + " 해제될 유저 아이디: " + userId);

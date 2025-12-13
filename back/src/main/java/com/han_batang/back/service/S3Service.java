@@ -35,7 +35,7 @@ public class S3Service {
 
     public String uploadFile(MultipartFile file) throws IOException {
         String key = file.getOriginalFilename();
-        Path tempFile = Files.createTempFile(null, null);
+        Path tempFile = Files.createTempFile(null,null);
         Files.copy(file.getInputStream(), tempFile, StandardCopyOption.REPLACE_EXISTING);
 
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
