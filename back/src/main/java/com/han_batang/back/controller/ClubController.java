@@ -85,7 +85,6 @@ public class ClubController {
         @RequestParam int size,
         @RequestParam(required = false) String type
     ){
-        System.out.println("타입은 무엇일까? :" + type);
         ResponseEntity<? super ShowClubListResponseDto> response = clubService.showClubList(page, size, type);
         return response;
     }
