@@ -53,7 +53,7 @@ public class WebSecurityConfig implements WebSocketMessageBrokerConfigurer{
  
     
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {       
         httpSecurity
             .cors(cors -> cors
             .configurationSource(corsConfigurationSource())
@@ -64,14 +64,15 @@ public class WebSecurityConfig implements WebSocketMessageBrokerConfigurer{
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
             .authorizeHttpRequests(request -> request
-                .requestMatchers("/", "/api/v1/auth/**", "/oauth2/**").permitAll()
-                .requestMatchers("/api/v1/response/**").permitAll()
-                .requestMatchers("/api/v1/s3/**").permitAll()
-                .requestMatchers("/api/v1/user/chat/**"
-                                            , "/api/v1/user/notifications"
-                                ).permitAll()
-                .requestMatchers("/api/v1/user/**").authenticated()
-                .anyRequest().authenticated()
+                .anyRequest().permitAll()
+                // .requestMatchers("/", "/api/v1/auth/**", "/oauth2/**").permitAll()
+                // .requestMatchers("/api/v1/response/**").permitAll()
+                // .requestMatchers("/api/v1/s3/**").permitAll()
+                // .requestMatchers("/api/v1/user/chat/**"
+                //                             , "/api/v1/user/notifications"
+                //                 ).permitAll()
+                // .requestMatchers("/api/v1/user/**").authenticated()
+                // .anyRequest().authenticated()
             )
             .oauth2Login(oauth2 -> oauth2 
                 .authorizationEndpoint(endpoint -> endpoint.baseUri("/api/v1/auth/oauth2"))
