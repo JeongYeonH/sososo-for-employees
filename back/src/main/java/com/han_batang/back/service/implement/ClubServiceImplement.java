@@ -155,11 +155,9 @@ public class ClubServiceImplement implements ClubService{
         Pageable pageable = null;            
         if("Latest".equals(type)){
             pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
-        }            
-        if("Popular".equals(type)){
+        }else if("Popular".equals(type)){
             pageable = PageRequest.of(page, size, Sort.by("clubPageVisitedNum").descending());
-        }            
-        if(pageable == null){
+        }else{
             return ShowClubListResponseDto.databaseError();    
         }       
         Page<ClubEntity> clubPages = clubRepository.findAll(pageable);          
