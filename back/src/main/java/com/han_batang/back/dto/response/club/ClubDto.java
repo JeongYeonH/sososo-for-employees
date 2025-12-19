@@ -2,9 +2,12 @@ package com.han_batang.back.dto.response.club;
 
 import java.util.Optional;
 
+import org.springframework.data.annotation.Id;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.han_batang.back.entity.ClubEntity;
 import com.han_batang.back.entity.ClubInfoEntity;
+
 
 import lombok.Getter;
 import lombok.Setter;
@@ -14,6 +17,7 @@ import lombok.Setter;
 public class ClubDto {
     
     @JsonProperty("clubId")
+    @Id
     private Integer clubId;
     private String clubTitle;
     private String clubThumbnailUrl;
