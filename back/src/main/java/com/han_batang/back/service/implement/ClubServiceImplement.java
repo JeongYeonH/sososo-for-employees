@@ -35,6 +35,7 @@ import com.han_batang.back.service.ClubService;
 import com.han_batang.back.service.S3Service;
 import com.han_batang.back.service.ChatService;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -150,6 +151,9 @@ public class ClubServiceImplement implements ClubService{
     }
 
     @Override
+    @Cacheable(value = "club:list", 
+    key = "#page + ':' + #size + ':' + #type",
+    unless = "#result == null")
     public ResponseEntity<? super ShowClubListResponseDto> showClubList(int page, int size, String type) {
         
         Pageable pageable = null;            
