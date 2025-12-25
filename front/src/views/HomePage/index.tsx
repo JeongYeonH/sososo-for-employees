@@ -71,17 +71,17 @@ export default function HomePage() {
 
         const requestBody: ShowClubListRequestDto = { type, page, size: 8 };
         const response = await showClubListRequest(requestBody);
-        
-        if(response.code === "ND"){
-            setNoData(true);
-        }else{
-            setNoData(false);
-            const { clubs: newClubs, last: lastPage } = response;
-            setClubList((prevClubs) => [...prevClubs, ...newClubs]);
-            setIsLast(lastPage);
-            setLoading(false);  
+        const { clubs, last: lastPage } = response;
+
+        if (!Array.isArray(clubs)) {
+            console.error("clubs is not array", response);
+            setLoading(false);
+            return;
         }
-        
+
+        setClubList(prevClubs => [...prevClubs, ...clubs]);
+        setIsLast(lastPage);
+        setLoading(false);       
     }
 
     const fetchClubsByCategories = async (type: string, category: string) => {
@@ -116,15 +116,17 @@ export default function HomePage() {
         setLoading(true);
         const requestBody: SearchClubRequestDto = {keyword, page, size: 8 };
         const response = await searchClubRequest(requestBody);
-        if(response.code === "ND"){
-            setNoData(true);
-        }else{
-            setNoData(false);
-            const { clubs: newClubs, last: lastPage } = response;
-            setClubList((prevClubs) => [...prevClubs, ...newClubs]);
-            setIsLast(lastPage);
-            setLoading(false);  
-        }       
+        const { clubs: newClubs, last: lastPage } = response;
+        
+        if (!Array.isArray(newClubs)) {
+            console.error("clubs is not array", response);
+            setLoading(false);
+            return;
+        }
+       
+        setClubList(prevClubs => [...prevClubs, ...newClubs]);
+        setIsLast(!!lastPage);
+        setLoading(false);             
     }
 
 
@@ -267,9 +269,6 @@ export default function HomePage() {
                 </div>
                 </>
             )}
-
-
-
 
         </div>
     )

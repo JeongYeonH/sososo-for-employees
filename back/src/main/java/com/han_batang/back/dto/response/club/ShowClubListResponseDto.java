@@ -22,6 +22,7 @@ public class ShowClubListResponseDto extends ResponseDto{
     private boolean isLast;
 
     public ShowClubListResponseDto(List<ClubDto> dtoList, boolean isLast){
+        super();
         this.clubs = dtoList;
         this.isLast = isLast;
     }
