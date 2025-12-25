@@ -8,12 +8,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.han_batang.back.entity.ClubEntity;
 import com.han_batang.back.entity.ClubInfoEntity;
 
-
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ClubDto {
     
     @JsonProperty("clubId")

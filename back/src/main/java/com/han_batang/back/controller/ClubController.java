@@ -80,12 +80,12 @@ public class ClubController {
     }
 
     @GetMapping("/api/v1/response/show-club-list")
-    public ResponseEntity<? super ShowClubListResponseDto> showClubList(
+    public ShowClubListResponseDto showClubList(
         @RequestParam int page,
         @RequestParam int size,
         @RequestParam(required = false) String type
     ){
-        ResponseEntity<? super ShowClubListResponseDto> response = clubService.showClubList(page, size, type);
+        ShowClubListResponseDto response = clubService.showClubList(page, size, type);
         return response;
     }
 
