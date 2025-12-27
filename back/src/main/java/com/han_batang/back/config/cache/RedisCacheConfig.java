@@ -55,7 +55,7 @@ public class RedisCacheConfig implements CacheConfig{
                     RedisSerializationContext.SerializationPair
                         .fromSerializer(new GenericJackson2JsonRedisSerializer())
                )
-               .entryTtl(Duration.ofMinutes(5));
+               .entryTtl(Duration.ofMinutes(3));
 
         return RedisCacheManager.builder(connectionFactory)
                 .cacheDefaults(config)
