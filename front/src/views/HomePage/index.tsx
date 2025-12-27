@@ -197,7 +197,7 @@ export default function HomePage() {
     }
 
     return (
-        <div id='home-page-wrapper'>
+        <div id='home-page-wrapper'>           
             <div className='sections'>
                 <div className='main-text'>
                     Fill your life with joy
@@ -247,29 +247,28 @@ export default function HomePage() {
                     </button>
                 </div>
             </div>
-            { noData ? (
-                <>
-                <div className='h-[200px] flex items-center justify-center text-gray-400 text-3xl'>
-                    {quote}
-                </div>
-                </>
-            ):(
-                <>
-                <div className='card-sections'>
-                    {clubList.map((club: ClubDto) =>(
-                        <div className='card-box' key={club.clubId} onClick={() => {handleCardClick(club.clubId)}}>
-                            <CardBox 
-                            clubTitle={club.clubTitle} 
-                            clubCardImage={club.clubThumbnailUrl} 
-                            clubCurrentMemberNum={club.clubCurrentMemberNum} 
-                            clubPageVisitedNum={club.clubPageVisitedNum}
-                            clubCardLocation={club.clubLocation}/>
-                        </div>
-                    ))}
-                </div>
-                </>
-            )}
-
+                { noData ? (
+                    <>
+                    <div className='h-[200px] flex items-center justify-center text-gray-400 text-3xl'>
+                        {quote}
+                    </div>
+                    </>
+                ):(
+                    <>
+                    <div className='card-sections'>
+                        {clubList.map((club: ClubDto) =>(
+                            <div className='card-box' key={club.clubId} onClick={() => {handleCardClick(club.clubId)}}>
+                                <CardBox 
+                                clubTitle={club.clubTitle} 
+                                clubCardImage={club.clubThumbnailUrl} 
+                                clubCurrentMemberNum={club.clubCurrentMemberNum} 
+                                clubPageVisitedNum={club.clubPageVisitedNum}
+                                clubCardLocation={club.clubLocation}/>
+                            </div>
+                        ))}
+                    </div>
+                    </>
+                )}
         </div>
     )
 }

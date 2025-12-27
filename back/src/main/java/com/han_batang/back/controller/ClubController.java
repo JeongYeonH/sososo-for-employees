@@ -90,14 +90,14 @@ public class ClubController {
     }
 
     @GetMapping("/api/v1/response/show-club-list-category")
-    public ResponseEntity<? super ShowClubListResponseDto> showClubListByCategory(
+    public ShowClubListResponseDto showClubListByCategory(
         @RequestParam int page,
         @RequestParam int size,
         @RequestParam(required = false) String type,
         @RequestParam(required = false) String category
     ){
         System.out.println("타입은 무엇일까? :" + type);
-        ResponseEntity<? super ShowClubListResponseDto> response = clubService.showClubListByCategory(page, size, type, category);
+        ShowClubListResponseDto response = clubService.showClubListByCategory(page, size, type, category);
         return response;
     }
     

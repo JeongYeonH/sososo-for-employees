@@ -29,21 +29,35 @@ export default function(){
 
     const randomPage = page[Math.floor(Math.random() * page.length)];
     const randomType = type[Math.floor(Math.random() * type.length)];
-    const randomCategory = category[Math.floor(Math.random() * category.length)];
+    const randomCategory = encodeURIComponent(category[Math.floor(Math.random() * category.length)]);
 
     const useCategory = Math.random() < 0.5;
-
-    const url = `http://localhost:4040/api/v1/response/show-club-list?`
-                        + `size=${size}`
-                        + `&page=${randomPage}`
-                        + `&type=${randomType}`;
     
-    if(useCategory){
-        //url += `&category=${randomCategory}`
+    const base = 'http://localhost:4040';
+    const command1 = 'show-club-list';
+    const command2 = 'show-club-list-category';
+
+    function customUrl(base, command, size, randomPage, randomType){
+        const custom = base
+                + `/api/v1/response/${command}?`
+                + `size=${size}`
+                + `&page=${randomPage}`
+                + `&type=${randomType}`;
+        
+        return custom;
+    }
+    
+    let url = null;
+    
+    if(!useCategory){
+        url = customUrl(base, command1, size, randomPage, randomType);
+    }else{
+        url = customUrl(base, command2, size, randomPage, randomType) 
+                + `&category=${randomCategory}`;
     }
 
     const res = http.get(
-        url  ,{
+        url ,{
                 headers: {
                     Origin: 'http://localhost:3000'
                 },
@@ -57,16 +71,16 @@ export default function(){
     sleep(1)
 }
 
-//redis 있을 시
+//redis 있을 시 .. max가 가끔 튐
     //HTTP
-    //http_req_duration..............: avg=2.85ms min=1.38ms med=2.74ms max=14.04ms p(90)=3.49ms p(95)=3.86ms
-    //  { expected_response:true }...: avg=2.85ms min=1.38ms med=2.74ms max=14.04ms p(90)=3.49ms p(95)=3.86ms
+    //http_req_duration..............: avg=4.64ms min=1.37ms med=3.08ms max=32.42ms p(90)=7.92ms p(95)=8.44ms
+    //  { expected_response:true }...: avg=4.64ms min=1.37ms med=3.08ms max=32.42ms p(90)=7.92ms p(95)=8.44ms
     //http_req_failed................: 0.00%  0 out of 293
-    //http_reqs......................: 293    14.226679/s
+    //http_reqs......................: 293    14.224/s
 
 //redis 없을 시
     //HTTP
-    //http_req_duration..............: avg=13.39ms min=6.34ms med=9.1ms max=32.25ms p(90)=24.75ms p(95)=26.65ms
-    //  { expected_response:true }...: avg=13.39ms min=6.34ms med=9.1ms max=32.25ms p(90)=24.75ms p(95)=26.65ms
+    //http_req_duration..............: avg=8.5ms min=4.13ms med=6.62ms max=32.74ms p(90)=19.4ms p(95)=20.61ms
+    //  { expected_response:true }...: avg=8.5ms min=4.13ms med=6.62ms max=32.74ms p(90)=19.4ms p(95)=20.61ms
     //http_req_failed................: 0.00%  0 out of 293
-    //http_reqs......................: 293    14.21106/s
+    //http_reqs......................: 293    14.223049/s
