@@ -151,11 +151,11 @@ public class ClubServiceImplement implements ClubService{
     }
 
     @Override
-    @Cacheable(value = "club:list", 
+    @Cacheable(
+    value = "club:list", 
     key = "#page + ':' + #size + ':' + #type",
     unless = "#result == null")
-    public ShowClubListResponseDto showClubList(int page, int size, String type) {
-        
+    public ShowClubListResponseDto showClubList(int page, int size, String type) {        
         Pageable pageable = null;            
         if("Latest".equals(type)){
             pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
@@ -174,32 +174,29 @@ public class ClubServiceImplement implements ClubService{
 
     @Override
     @Transactional
-    public ResponseEntity<? super ShowClubListResponseDto> showClubListByCategory(int page, int size, String type, String category) {
-        try{
-            Pageable pageable = null;          
-            if("Latest".equals(type)){
-                pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
-            }            
-            if("Popular".equals(type)){
-                pageable = PageRequest.of(page, size, Sort.by("clubPageVisitedNum").descending());
-            }             
-            if(pageable == null){      
-                return ShowClubListResponseDto.databaseError();    
-            }
+    @Cacheable(
+    value = "club:list",
+    key = "#page + ':' + #size + ':' + #type + ':' + #category",
+    unless = "#result == null"
+    )
+    public ShowClubListResponseDto showClubListByCategory(int page, int size, String type, String category) {      
+        Pageable pageable = null;          
+        if("Latest".equals(type)){
+            pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
+        }else if("Popular".equals(type)){
+            pageable = PageRequest.of(page, size, Sort.by("clubPageVisitedNum").descending());
+        }else{      
+            return null;    
+        }
 
-            Page<ClubEntity> clubPages = clubRepository.findByClubInfoClubType(category, pageable);
-            if(clubPages.isEmpty()){
-                return ShowClubListResponseDto.noData();
-            }
-
-            List<ClubDto> clubDtos = getClubDtos(clubPages);
-            ShowClubListResponseDto responseDto = new ShowClubListResponseDto(clubDtos, clubPages.isLast());
-            return ResponseEntity.ok(responseDto);
-
-        }catch(Exception exception){
-            exception.printStackTrace();;
+        Page<ClubEntity> clubPages = clubRepository.findByClubInfoClubType(category, pageable);
+        if(clubPages.isEmpty()){
             return null;
         }
+
+        List<ClubDto> clubDtos = getClubDtos(clubPages);
+        ShowClubListResponseDto responseDto = new ShowClubListResponseDto(clubDtos, clubPages.isLast());
+        return responseDto;
     }
 
 
