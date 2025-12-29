@@ -5,8 +5,9 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,7 +59,6 @@ public class ClubServiceImplement implements ClubService{
     private final ClubInfoRepository clubInfoRepository;
 
     private static final int TOP_N = 4;
-    private static final Duration CACHE_TTL = Duration.ofMinutes(5);
 
     private final RedisTemplate<String, Object> redisTemplate;
     
@@ -207,18 +207,26 @@ public class ClubServiceImplement implements ClubService{
 
 
     @Override
-    @Transactional
-    public ResponseEntity<? super ShowClubDetailResponseDto> showClubByClubId(@NonNull Integer clubId) {
-        Optional<ClubEntity> clubEntity = clubRepository.findById(clubId);
-        
-        ClubEntity club = clubEntity.get();
-        club.increaseVisitedNum();
-        clubRepository.save(club);
+    @Transactional(readOnly = true)
+    public ShowClubDetailResponseDto showClubByClubId(@NonNull Integer clubId) {        
+        String detailKey = "club:detail:" + clubId;
+        String visitKey = "club:visit:" + clubId;
+            
+        redisTemplate.opsForValue().increment(visitKey);
+        recordVisit(clubId);
 
-        Optional<ClubInfoEntity> clubInfoEntity = clubInfoRepository.getClubInfo(clubId);
-        ClubDto clubDto = new ClubDto(club, clubInfoEntity);
-        ShowClubDetailResponseDto responseDto = new ShowClubDetailResponseDto(clubDto);
-        return ResponseEntity.ok(responseDto);       
+        ShowClubDetailResponseDto cached = 
+            (ShowClubDetailResponseDto) redisTemplate.opsForValue().get(detailKey);
+
+        if(cached != null){
+            return cached;
+        }
+
+        ClubEntity club = clubRepository.findById(clubId).orElseThrow();
+        Optional<ClubInfoEntity> clubInfoEntity = clubInfoRepository.getClubInfo(clubId);    
+        ShowClubDetailResponseDto responseDto = 
+            new ShowClubDetailResponseDto(new ClubDto(club, clubInfoEntity));
+        return responseDto;       
     }
 
 
@@ -305,4 +313,63 @@ public class ClubServiceImplement implements ClubService{
         }
         return clubDtos;
     } 
+
+    private void recordVisit(Integer clubId){
+        redisTemplate.opsForZSet().incrementScore("club:ranking", clubId, 1);
+    }
+
+    @Override
+    public void maintainTopClubDetailCache(){
+        Set<Object> raw = 
+            redisTemplate.opsForZSet().reverseRange("club:ranking", 0, TOP_N - 1);
+        
+        @SuppressWarnings("null")
+        Set<Integer> topIds = raw.stream()
+            .map(o -> Integer.parseInt(o.toString()))
+            .collect(Collectors.toSet());
+
+        if(topIds == null) return;
+
+        Set<String> cachedKeys =
+            redisTemplate.keys("club:detail:*");
+        
+        if(cachedKeys != null){
+            for(String key : cachedKeys){
+                Integer id = extractId(key);
+                if(!topIds.contains(id)){
+                    redisTemplate.delete(key);
+                }
+            }
+        }
+
+        for(Integer id: topIds){
+            String key = "club:detail:" + id;
+            if(!Boolean.TRUE.equals(redisTemplate.hasKey(key))){
+                cacheClubDetail(id);
+            }
+        }
+    }  
+    
+    private void cacheClubDetail(Integer clubId){
+        ClubEntity club = clubRepository.findById(clubId).orElseThrow();
+        Optional<ClubInfoEntity> info = clubInfoRepository.getClubInfo(clubId);
+
+        ShowClubDetailResponseDto dto =
+            new ShowClubDetailResponseDto(new ClubDto(club, info));
+        
+        redisTemplate.opsForValue().set(
+            "club:detail:" + clubId,
+            dto,
+            Duration.ofMinutes(10)
+        );
+    }
+
+    private Integer extractId(String key){
+        int idx = key.lastIndexOf(":");
+        if(idx == -1 || idx == key.length() - 1){
+            throw new IllegalArgumentException("Invalid redis key: " + idx);
+        }
+
+        return Integer.parseInt(key.substring(idx + 1));
+    }
 }

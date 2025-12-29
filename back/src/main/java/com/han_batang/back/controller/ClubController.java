@@ -112,10 +112,10 @@ public class ClubController {
     }
 
     @GetMapping("/api/v1/response/show-club/{clubId}")
-    public ResponseEntity<? super ShowClubDetailResponseDto> showClubByClubId(
+    public ShowClubDetailResponseDto showClubByClubId(
         @PathVariable Integer clubId
     ){
-        ResponseEntity<? super ShowClubDetailResponseDto> response = clubService.showClubByClubId(clubId);
+        ShowClubDetailResponseDto response = clubService.showClubByClubId(clubId);
         return response;
     }
     
