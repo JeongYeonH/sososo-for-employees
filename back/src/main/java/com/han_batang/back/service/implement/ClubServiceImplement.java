@@ -1,6 +1,7 @@
 package com.han_batang.back.service.implement;
 
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -40,6 +41,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.redis.core.RedisTemplate;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -55,6 +57,10 @@ public class ClubServiceImplement implements ClubService{
     private final ClubMemberRepository clubMemberRepository;
     private final ClubInfoRepository clubInfoRepository;
 
+    private static final int TOP_N = 4;
+    private static final Duration CACHE_TTL = Duration.ofMinutes(5);
+
+    private final RedisTemplate<String, Object> redisTemplate;
     
     @Override
     @Transactional
@@ -202,6 +208,22 @@ public class ClubServiceImplement implements ClubService{
 
     @Override
     @Transactional
+    public ResponseEntity<? super ShowClubDetailResponseDto> showClubByClubId(@NonNull Integer clubId) {
+        Optional<ClubEntity> clubEntity = clubRepository.findById(clubId);
+        
+        ClubEntity club = clubEntity.get();
+        club.increaseVisitedNum();
+        clubRepository.save(club);
+
+        Optional<ClubInfoEntity> clubInfoEntity = clubInfoRepository.getClubInfo(clubId);
+        ClubDto clubDto = new ClubDto(club, clubInfoEntity);
+        ShowClubDetailResponseDto responseDto = new ShowClubDetailResponseDto(clubDto);
+        return ResponseEntity.ok(responseDto);       
+    }
+
+
+    @Override
+    @Transactional
     public ResponseEntity<? super ShowClubListResponseDto> searchClub(int page, int size, String keyword) {
        try{
             Pageable pageable = PageRequest.of(page, size, Sort.by("created_date").descending()); 
@@ -219,31 +241,6 @@ public class ClubServiceImplement implements ClubService{
             exception.printStackTrace();
             return null;
        }
-    }
-
-    @Override
-    @Transactional
-    public ResponseEntity<? super ShowClubDetailResponseDto> showClubByClubId(@NonNull Integer clubId) {
-        
-        try{
-            Optional<ClubEntity> clubEntity = clubRepository.findById(clubId);
-            if (clubEntity.isPresent()) {
-                ClubEntity club = clubEntity.get();
-                club.increaseVisitedNum();
-                clubRepository.save(club);
-
-                Optional<ClubInfoEntity> clubInfoEntity = clubInfoRepository.getClubInfo(clubId);
-                ClubDto clubDto = new ClubDto(club, clubInfoEntity);
-                ShowClubDetailResponseDto responseDto = new ShowClubDetailResponseDto(clubDto);
-                return ResponseEntity.ok(responseDto);
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-            }
-
-        }catch(Exception exception){
-            exception.printStackTrace();
-            return null;
-        }
     }
 
 
