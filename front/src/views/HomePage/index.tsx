@@ -94,15 +94,17 @@ export default function HomePage() {
         setLoading(true);
         const requestBody: ShowClubListCategoryRequestDto = { category, type, page, size: 8 };
         const response = await showClubListByCategoryRequest(requestBody);
-        if(response.code === "ND"){
-            setNoData(true);
-        }else{
-            setNoData(false);
-            const { clubs: newClubs, last: lastPage } = response;
-            setClubList((prevClubs) => [...prevClubs, ...newClubs]);
-            setIsLast(lastPage);
-            setLoading(false);  
-        }       
+        const { clubs: newClubs, last: lastPage } = response;
+
+        if (!Array.isArray(newClubs)) {
+            console.error("clubs is not array", response);
+            setLoading(false);
+            return;
+        }
+
+        setClubList(prevClubs => [...prevClubs, ...newClubs]);
+        setIsLast(!!lastPage);
+        setLoading(false);      
     }
 
     const searchClubByKeyword = async (keyword: string) => {
@@ -247,6 +249,7 @@ export default function HomePage() {
                     </button>
                 </div>
             </div>
+            <div className="card-wrapper">
                 { noData ? (
                     <>
                     <div className='h-[200px] flex items-center justify-center text-gray-400 text-3xl'>
@@ -269,6 +272,7 @@ export default function HomePage() {
                     </div>
                     </>
                 )}
+            </div>               
         </div>
     )
 }

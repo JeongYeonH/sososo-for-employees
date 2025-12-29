@@ -189,12 +189,16 @@
     font-weight: 500;
 }
 
-.card-sections{
-    margin: 0px 60px;
-    justify-content: center;
+.card-wrapper {
+    display: flex;
+    justify-content: center; 
+}
+
+.card-sections{ 
     display: grid;
-    grid-template-columns: repeat(4, max-content);
+    grid-template-columns: repeat(4, 1fr);
     gap: 28px;
+    justify-content: start;
 }
 
 .card-box{
@@ -208,7 +212,7 @@
     object-fit: cover; 
     overflow: hidden;
     border-radius: 10px;
-  }
+}
 
 .category-list-card{
     font-weight: 500;
