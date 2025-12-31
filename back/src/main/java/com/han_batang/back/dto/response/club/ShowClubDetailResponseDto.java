@@ -6,10 +6,12 @@ import com.han_batang.back.dto.response.ResponseDto;
 
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class ShowClubDetailResponseDto extends ResponseDto{
     
     private ClubDto club;

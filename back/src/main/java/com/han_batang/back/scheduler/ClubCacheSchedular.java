@@ -12,9 +12,11 @@ import lombok.RequiredArgsConstructor;
 public class ClubCacheSchedular {
 
     private final ClubService clubService;
-
+    
     @Scheduled(fixedRate = 30_000)
     public void maintainTopCache(){
+        System.out.println("주기적으로 돌아야 - 밖");
         clubService.maintainTopClubDetailCache();
+        clubService.flushVisitDeltaToDB();
     }
 }
