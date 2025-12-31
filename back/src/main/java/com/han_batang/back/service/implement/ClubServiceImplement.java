@@ -37,12 +37,15 @@ import com.han_batang.back.service.ClubService;
 import com.han_batang.back.service.S3Service;
 import com.han_batang.back.service.ChatService;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ScanOptions;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -58,9 +61,10 @@ public class ClubServiceImplement implements ClubService{
     private final ClubMemberRepository clubMemberRepository;
     private final ClubInfoRepository clubInfoRepository;
 
-    private static final int TOP_N = 4;
+    private static final int TOP_N = 8;
 
-    private final RedisTemplate<String, Object> redisTemplate;
+    @Autowired(required = false)
+    private RedisTemplate<String, Object> redisTemplate;
     
     @Override
     @Transactional
@@ -151,8 +155,6 @@ public class ClubServiceImplement implements ClubService{
 
         chatService.joinChatRoom(joinerUserId, clubId);
 
-
-
         return JoinClubResponseDto.success();
     }
 
@@ -211,17 +213,21 @@ public class ClubServiceImplement implements ClubService{
     public ShowClubDetailResponseDto showClubByClubId(@NonNull Integer clubId) {        
         String detailKey = "club:detail:" + clubId;
         String visitKey = "club:visit:" + clubId;
-            
-        redisTemplate.opsForValue().increment(visitKey);
-        recordVisit(clubId);
+        
+        if (redisTemplate != null) {
+            redisTemplate.opsForValue().increment(visitKey);
+            recordVisit(clubId);
 
-        ShowClubDetailResponseDto cached = 
-            (ShowClubDetailResponseDto) redisTemplate.opsForValue().get(detailKey);
+            ShowClubDetailResponseDto cached = 
+                (ShowClubDetailResponseDto) redisTemplate.opsForValue().get(detailKey);
 
-        if(cached != null){
-            return cached;
+            if(cached != null){
+                System.out.println("캐시가 있습니다 반환 시행");
+                return cached;
+            }
         }
 
+        System.out.println("캐시가 없습니다 저장 시행");
         ClubEntity club = clubRepository.findById(clubId).orElseThrow();
         Optional<ClubInfoEntity> clubInfoEntity = clubInfoRepository.getClubInfo(clubId);    
         ShowClubDetailResponseDto responseDto = 
@@ -318,11 +324,13 @@ public class ClubServiceImplement implements ClubService{
         redisTemplate.opsForZSet().incrementScore("club:ranking", clubId, 1);
     }
 
+
     @Override
     public void maintainTopClubDetailCache(){
         Set<Object> raw = 
             redisTemplate.opsForZSet().reverseRange("club:ranking", 0, TOP_N - 1);
         
+        System.out.println("maintainTopClubDetailCache + 주기적으로 돌아야");
         @SuppressWarnings("null")
         Set<Integer> topIds = raw.stream()
             .map(o -> Integer.parseInt(o.toString()))
@@ -349,6 +357,35 @@ public class ClubServiceImplement implements ClubService{
             }
         }
     }  
+    
+
+    @Override
+    public void flushVisitDeltaToDB(){
+        System.out.println("flushVisitDeltaToDB + 주기적으로 돌아야");
+        ScanOptions options = ScanOptions.scanOptions()
+            .match("club:visit:*")
+            .count(100)
+            .build();
+
+        @SuppressWarnings({ "null", "deprecation" })
+        Cursor<byte[]> cursor =
+            redisTemplate.getConnectionFactory()
+                .getConnection()
+                .scan(options);
+
+        while(cursor.hasNext()){
+            String key = new String(cursor.next());
+            int clubId = Integer.valueOf(key.replace("club:visit:", ""));
+            Optional<ClubEntity> clubEntity = clubRepository.findById(clubId);
+            if (clubEntity.isPresent()) {
+                ClubEntity club = clubEntity.get();
+                club.increaseVisitedNum();
+                clubRepository.save(club);
+            }
+            
+            redisTemplate.delete(key);
+        }
+    }
     
     private void cacheClubDetail(Integer clubId){
         ClubEntity club = clubRepository.findById(clubId).orElseThrow();

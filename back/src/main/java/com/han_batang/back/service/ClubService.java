@@ -22,4 +22,5 @@ public interface ClubService {
     ResponseEntity<? super ShowClubListResponseDto> searchClub(int page, int size, String keyword);
 
     void maintainTopClubDetailCache();
+    void flushVisitDeltaToDB();
 } 
