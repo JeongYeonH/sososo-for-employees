@@ -48,7 +48,9 @@ public class AuthController {
     public ResponseEntity<? super CheckCertificationResponseDto> checkCertification (
         @RequestBody @Valid CheckCertificationRequestDto requestBody
     ){
+        //System.out.println("체크 실행?");
         ResponseEntity<? super CheckCertificationResponseDto> response = authService.checkCertification(requestBody);
+        //System.out.println("체크 실행? "+ response.toString());
         return response;
     }
 

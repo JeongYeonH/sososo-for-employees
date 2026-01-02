@@ -55,7 +55,6 @@ export default function SignUp() {
             setIdCheck(false);
         }
         if(code===ResponseCode.DATABASE_ERROR) alert('데이터베이스 오류입니다.');
-        if(code !==ResponseCode.SUCCESS) return;
 
         setIdError(false);
         setIdMessage('사용 가능한 아이디 입니다.');
@@ -80,16 +79,17 @@ export default function SignUp() {
     }
 
     const CheckCertificationResponse = (responseBody: ResponseBody<CheckCertificationResponseDto>) => {
-        if(!responseBody) return;
+        if(!responseBody){
+            alert('아이디, 이메일, 인증번호를 모두 입력하세요.');
+            return;
+        } 
         const {code} = responseBody;
-        if(code===ResponseCode.VALIDATION_FAIL) alert('아이디, 이메일, 인증번호를 모두 입력하세요.');
         if(code===ResponseCode.CERTIFICATION_FAIL) {
             setCertificationNumberError(true);
             setCertificationNumberMessage('인증번호가 일치하지 않습니다.');
             setCertificationCheck(false);
         }
         if(code===ResponseCode.DATABASE_ERROR) alert('데이터베이스 오류입니다.');
-        if(code !==ResponseCode.SUCCESS) return;
 
         setCertificationNumberError(false);
         setCertificationNumberMessage('인증번호가 확인되었습니다.');
@@ -111,8 +111,9 @@ export default function SignUp() {
             setCertificationCheck(false);
         }
         if(code===ResponseCode.DATABASE_ERROR) alert('데이터베이스 오류입니다.');
-        if(code !==ResponseCode.SUCCESS) return;
-
+        //if(code !==ResponseCode.SUCCESS) return;
+        alert('회원가입이 완료되었습니다.');
+        
         navigate('/auth/sign-in');
     }
 
@@ -164,8 +165,10 @@ export default function SignUp() {
     };
 
     const onCertificationNumberButtonClickHandler = () =>{
-        if(!id || !email || !certificationNumber) return;
-
+        if(!id || !email || !certificationNumber){
+            alert('모든 값을 입력하세요.');
+            return;
+        } 
         const requestBody: CheckCertificationRequestDto = { id, email, certificationNumber};
         CheckCertificationRequest(requestBody).then(CheckCertificationResponse);
     }

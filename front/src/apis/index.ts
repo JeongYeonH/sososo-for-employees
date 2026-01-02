@@ -90,7 +90,6 @@ export const CheckCertificationRequest = async (requestBody: CheckCertificationR
 
 export const showClubListRequest = async (requestBody: ShowClubListRequestDto) => {
     const result = await axios.get(SHOW_CLUB_LIST_URL(), {params: requestBody});
-    console.log("핵심로직" + result.status)
     return result.data;
 }
 
