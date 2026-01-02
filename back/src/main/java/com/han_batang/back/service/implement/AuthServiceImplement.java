@@ -66,20 +66,20 @@ public class AuthServiceImplement implements AuthService{
 
                String userId = dto.getId();
                String email = dto.getEmail();
-
+               System.out.println("확인 실행 1");
                boolean isExistId = userRepository.existsByUserId(userId);
                if(isExistId) return EmailCertificationResponseDto.duplicatedId();
-
+               System.out.println("확인 실행 2");
                String certificationNumber = CertificationNumber.getCertificationNumber();
                if(certificationNumber == null) return EmailCertificationResponseDto.mailSendFail();
                if(email == null) return EmailCertificationResponseDto.mailSendFail();
-
+               System.out.println("확인 실행 3");
                boolean isSuccessed = emailProvider.sendCertificationMail(email, certificationNumber);
                if(!isSuccessed) return EmailCertificationResponseDto.mailSendFail();
-
+               System.out.println("확인 실행 4");
                CertificationEntity certificationEntity = new CertificationEntity(userId, email, certificationNumber);
                certificationRepository.save(certificationEntity);
-
+               System.out.println("확인 실행 5");
           }catch(Exception exception){
                exception.printStackTrace();
                return null;

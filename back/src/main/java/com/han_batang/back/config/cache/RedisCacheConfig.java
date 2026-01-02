@@ -23,10 +23,10 @@ import org.springframework.context.annotation.Bean;
 public class RedisCacheConfig implements CacheConfig{
     //gradlew bootRun --args="--spring.profiles.active=redis"
     
-    @Value("${spring.data.redis.host}")
+    @Value("${SPRING_DATA_REDIS_HOST}")
     private String host;
 
-    @Value("${spring.data.redis.port}")
+    @Value("${SPRING_DATA_REDIS_PORT}")
     private int port;
 
     @Bean
