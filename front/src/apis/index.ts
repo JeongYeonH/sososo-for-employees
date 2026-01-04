@@ -20,7 +20,7 @@ const errorHandler = (error: any) => {
     return responseBody;
 }
 
-const DOMAIN = 'http://localhost:4040';
+const DOMAIN = 'http://43.202.199.147:4040';
 const API_DOMAIN = `${DOMAIN}/api/v1`;
 
 export const SNS_SIGN_IN_URL = (type: 'kakao' | 'google') => `${API_DOMAIN}/auth/oauth2/${type}`;
