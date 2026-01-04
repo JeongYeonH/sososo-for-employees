@@ -15,39 +15,39 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: 코드 확인
         uses: actions/checkout@v2
 
-      - name: Set up Docker Build
+      - name: 도커 빌드 설정 진행
         uses: docker/setup-buildx-action@v2
 
-      - name: Grant execute permission to gradlew
+      - name: gradlew 실행
         run: |
           cd back
           chmod +x ./gradlew 
           
 
-      - name: Download application.properties from S3 URL
+      - name: S3 URL에서 application properties 다운로드
         run: |
-          curl -o back/src/main/resources/application.properties https://myappconfig.s3.ap-northeast-2.amazonaws.com/application.properties
+          curl -o back/src/main/resources/application.properties https://sososo-storge.s3.ap-northeast-2.amazonaws.com/application.properties
 
-      - name: Verify application.properties
+      - name: pplication properties 다운 확인
         run: |
           ls -l back/src/main/resources/
           cat back/src/main/resources/application.properties
           
           
-      - name: Build Java project with Gradle
+      - name: Gradle로 자바 파일 빌드
         run: |
           cd back
           ./gradlew build 
 
-      - name: List build/libs directory to verify JAR file
+      - name: 빌드된 JAR 파일 확인
         run: |
           cd back
           ls build/libs/
 
-      - name: Build Back and Front Docker image
+      - name: 프론트 및 백엔드 JAR 파일 docker로 빌드
         run: |
           cd back
           docker build -t my-docker-back .
@@ -58,13 +58,13 @@ jobs:
           docker save my-docker-front -o my-docker-font.tar
 
 
-      - name: Show Docker images size
+      - name: 각 도커 이미지 사이즈 확인
         run: |
           docker images my-docker-back --format "{{.Size}}"
           docker images my-docker-front --format "{{.Size}}"
 
 
-      - name: Setting Uploading Docker images to S3
+      - name: 도커 이미지를 S3에 전송 (비밀 키 사용)
         run: |
           echo "${{ secrets.AWS_SSH_PRIVATE_KEY }}" > private-key.pem
           chmod 600 private-key.pem
@@ -74,101 +74,73 @@ jobs:
           aws configure set region ap-northeast-2
 
           
-      - name: Check if Docker image exists in S3
+      - name: S3에 이미 도커 이미지가 있는지 확인
         run: |
-          if aws s3 ls s3://myappconfig/my-docker-back.tar > /dev/null; then
-            echo "File my-docker-back already exists in S3. Downloading..."
+          if aws s3 ls s3://sososo-storge/my-docker-back.tar > /dev/null; then
+            echo "백엔드 이미지가 S3에 이미 있습니다."
           else
-            echo "File my-docker-back does not exist in S3. Uploading..."
-            aws s3 cp ./back/my-docker-back.tar s3://myappconfig/my-docker-back.tar
+            echo "백엔드 이미지가 없습니다. 업로드 중..."
+            aws s3 cp ./back/my-docker-back.tar s3://sososo-storge/my-docker-back.tar
           fi
 
-          if aws s3 ls s3://myappconfig/my-docker-front.tar > /dev/null; then
-            echo "File my-docker-front already exists in S3. Downloading..."
+          if aws s3 ls s3://sososo-storge/my-docker-front.tar > /dev/null; then
+            echo "프론트엔드 이미지가 S3에 이미 있습니다."
           else
-            echo "File my-docker-front does not exist in S3. Uploading..."
-            aws s3 cp ./back/my-docker-front.tar s3://myappconfig/my-docker-front.tar
+            echo "프론트엔드 이미지가 없습니다. 업로드 중..."
+            aws s3 cp ./front/my-docker-front.tar s3://sososo-storge/my-docker-front.tar
           fi
 
 
-      - name: Configure AWS CLI 2
+      - name: AWS CLI에 권한 획득 위해 키 정보 수집
         run: |
           aws configure set aws_access_key_id "${{ secrets.AWS_ACCESS_KEY_ID }}"
           aws configure set aws_secret_access_key "${{ secrets.AWS_SECRET_ACCESS_KEY }}"
           aws configure set region ap-northeast-2
 
 
-      - name: Download Docker image Back from S3 if not exists
+      - name: S3에 도커 이미지 없을 시 ec2에 통합 다운로드 진행
         run: |
           echo "${{ secrets.AWS_SSH_PRIVATE_KEY }}" > private-key.pem
           chmod 600 private-key.pem
-          echo "SSH private key added and permissions set."
-          ssh -o StrictHostKeyChecking=no -i private-key.pem ubuntu@ec2-3-39-252-205.ap-northeast-2.compute.amazonaws.com << 'EOF'
-            echo "Connecting to EC2 instance..."
+          echo "SSH키가 접속권한 획득 위해 사용됨."
+          ssh -o StrictHostKeyChecking=no -i private-key.pem ubuntu@ec2-43-202-199-147.ap-northeast-2.compute.amazonaws.com << 'EOF'
+            echo ""연결된 EC2에서 통합 배포를 시작합니다...""
 
             aws sts get-caller-identity
             if [ $? -ne 0 ]; then
-              echo "Error: AWS CLI is not properly authenticated. Check AWS credentials."
+              echo "접속권한을 획득하지 못했습니다. 키 확인요망."
               exit 1
             fi
                         
-            if [ ! -f /home/ubuntu/my-docker-back.tar ]; then
-              echo "File does not exist. Downloading..."
-              
-              AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} \
-              AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \             
-              aws s3 cp s3://myappconfig/my-docker-back.tar /home/ubuntu/my-docker-back.tar || echo "Failed to download the file from S3."
-            else
-              echo "File already exists. Skipping download."
-            fi
+            echo "S3에서 최신 이미지 가져오는 중..."
+            aws s3 cp s3://sososo-storge/my-docker-back.tar /home/ubuntu/my-docker-back.tar
+            aws s3 cp s3://sososo-storge/my-docker-front.tar /home/ubuntu/my-docker-front.tar
           EOF
 
-
-      - name: Download Docker image Front from S3 if not exists
-        run: |
-          echo "${{ secrets.AWS_SSH_PRIVATE_KEY }}" > private-key.pem
-          chmod 600 private-key.pem
-          echo "SSH private key added and permissions set."
-          ssh -o StrictHostKeyChecking=no -i private-key.pem ubuntu@ec2-43-200-255-143.ap-northeast-2.compute.amazonaws.com << 'EOF'
-            echo "Connecting to EC2 instance..."
-
-            aws sts get-caller-identity
-            if [ $? -ne 0 ]; then
-              echo "Error: AWS CLI is not properly authenticated. Check AWS credentials."
-              exit 1
-            fi
-                        
-            if [ ! -f /home/ubuntu/my-docker-back.tar ]; then
-              echo "File does not exist. Downloading..."
-              
-              AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} \
-              AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \             
-              aws s3 cp s3://myappconfig/my-docker-front.tar /home/ubuntu/my-docker-front.tar || echo "Failed to download the file from S3."
-            else
-              echo "File already exists. Skipping download."
-            fi
-          EOF
-          
-
-      - name: Load Docker image from tar file and Run
+      - name: ec2내 도커 파일 로드 및 실행
         run: |
           echo "${{ secrets.AWS_SSH_PRIVATE_KEY }}" > private-key.pem
           chmod 600 private-key.pem
           
-          ssh -o StrictHostKeyChecking=no -i private-key.pem ubuntu@ec2-3-39-252-205.ap-northeast-2.compute.amazonaws.com << 'EOF'
-            # Run Docker Back load inside the EC2 instance
+          ssh -o StrictHostKeyChecking=no -i private-key.pem ubuntu@ec2-43-202-199-147.ap-northeast-2.compute.amazonaws.com << 'EOF'
+            echo "백엔드 컨테이너 실행 중..."
             sudo docker load -i /home/ubuntu/my-docker-back.tar
-            # Optional: Start the container after loading the image
+            sudo docker stop my-back-container || true
             sudo docker rm my-back-container || true
-            sudo docker run -d --name my-back-container -p 4040:4040 my-docker-back:latest
-          EOF
+            sudo docker run -d --name my-back-container \
+              --add-host=host.docker.internal:host-gateway \
+              -e "SPRING_PROFILES_ACTIVE=redis" \
+              -p 4040:4040 my-docker-back:latest
 
-          ssh -o StrictHostKeyChecking=no -i private-key.pem ubuntu@ec2-43-200-255-143.ap-northeast-2.compute.amazonaws.com << 'EOF'
-            # Run Docker Front load inside the EC2 instance
+            echo "프론트엔드 컨테이너 실행 중..."
             sudo docker load -i /home/ubuntu/my-docker-front.tar
-            # Optional: Start the container after loading the image
-            sudo docker rm my-back-container || true
-            sudo docker run -d --name my-front-container -p 4040:4040 my-docker-front:latest
+            sudo docker stop my-front-container || true
+            sudo docker rm my-front-container || true
+            sudo docker run -d --name my-front-container \
+              -p 80:3000 my-docker-front:latest
+
+            sudo docker image prune -f
+            echo "모든 과정이 정상 처리 되었습니다."
           EOF
       
           
