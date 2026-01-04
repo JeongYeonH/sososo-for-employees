@@ -139,7 +139,7 @@ jobs:
             sudo docker stop my-front-container || true
             sudo docker rm my-front-container || true
             sudo docker run -d --name my-front-container \
-              -p 80:3000 my-docker-front:latest
+              -p 80:80 my-docker-front:latest
 
             sudo docker image prune -f
             echo "모든 과정이 정상 처리 되었습니다."
