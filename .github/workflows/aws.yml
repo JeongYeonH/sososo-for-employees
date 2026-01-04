@@ -55,13 +55,14 @@ jobs:
 
           cd ../front
           docker build -t my-docker-front .
-          docker save my-docker-front -o my-docker-font.tar
+          docker save my-docker-front -o my-docker-front.tar
 
 
       - name: 각 도커 이미지 사이즈 확인
         run: |
           docker images my-docker-back --format "{{.Size}}"
           docker images my-docker-front --format "{{.Size}}"
+
 
 
       - name: 도커 이미지를 S3에 전송 (비밀 키 사용)
@@ -72,7 +73,7 @@ jobs:
           aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws configure set region ap-northeast-2
-
+          
           
       - name: S3에 이미 도커 이미지가 있는지 확인
         run: |
@@ -102,6 +103,7 @@ jobs:
         run: |
           echo "${{ secrets.AWS_SSH_PRIVATE_KEY }}" > private-key.pem
           chmod 600 private-key.pem
+          
           echo "SSH키가 접속권한 획득 위해 사용됨."
           ssh -o StrictHostKeyChecking=no -i private-key.pem ubuntu@ec2-43-202-199-147.ap-northeast-2.compute.amazonaws.com << 'EOF'
             echo ""연결된 EC2에서 통합 배포를 시작합니다...""
@@ -146,4 +148,4 @@ jobs:
           
           
           
-          
+        
