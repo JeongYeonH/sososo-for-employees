@@ -1,5 +1,6 @@
 package com.han_batang.back.handler;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -17,9 +18,12 @@ import lombok.RequiredArgsConstructor;
 @Component
 @RequiredArgsConstructor
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler{
-   
+
     private final JwtProvider jwtProvider;
     
+    @Value("${app.frontend-url}")
+    private String frontendUrl;
+
     @Override
     public void onAuthenticationSuccess(
         HttpServletRequest request, 
@@ -33,6 +37,6 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler{
             String token = jwtProvider.create(userId);
             System.out.println("OAuth2 authentication success: " + authentication.getName());
             System.out.println("핸들러 거치고 나옴");
-            response.sendRedirect("http://localhost:3000/auth/oauth-response/" + token + "/3600");
-        }
+            response.sendRedirect("http://" + frontendUrl + ":3000/auth/oauth-response/" + token + "/3600");
+    }
 }

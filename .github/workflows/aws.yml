@@ -75,21 +75,23 @@ jobs:
           aws configure set region ap-northeast-2
           
           
-      - name: S3에 이미 도커 이미지가 있는지 확인
+      - name: S3에 도커 이미지 덮어쓰기
         run: |
+          # 백엔드 처리
           if aws s3 ls s3://sososo-storge/my-docker-back.tar > /dev/null; then
-            echo "백엔드 이미지가 S3에 이미 있습니다."
-          else
-            echo "백엔드 이미지가 없습니다. 업로드 중..."
-            aws s3 cp ./back/my-docker-back.tar s3://sososo-storge/my-docker-back.tar
+            echo "기존 백엔드 이미지가 발견되어 삭제합니다."
+            aws s3 rm s3://sososo-storge/my-docker-back.tar
           fi
+          echo "백엔드 이미지 업로드 중..."
+          aws s3 cp ./back/my-docker-back.tar s3://sososo-storge/my-docker-back.tar
 
+          # 프론트엔드 처리
           if aws s3 ls s3://sososo-storge/my-docker-front.tar > /dev/null; then
-            echo "프론트엔드 이미지가 S3에 이미 있습니다."
-          else
-            echo "프론트엔드 이미지가 없습니다. 업로드 중..."
-            aws s3 cp ./front/my-docker-front.tar s3://sososo-storge/my-docker-front.tar
+            echo "기존 프론트엔드 이미지가 발견되어 삭제합니다."
+            aws s3 rm s3://sososo-storge/my-docker-front.tar
           fi
+          echo "프론트엔드 이미지 업로드 중..."
+          aws s3 cp ./front/my-docker-front.tar s3://sososo-storge/my-docker-front.tar
 
 
       - name: AWS CLI에 권한 획득 위해 키 정보 수집
@@ -99,7 +101,7 @@ jobs:
           aws configure set region ap-northeast-2
 
 
-      - name: S3에 도커 이미지 없을 시 ec2에 통합 다운로드 진행
+      - name: S3로부터 도커 이미지 ec2에 통합 다운로드 진행
         run: |
           echo "${{ secrets.AWS_SSH_PRIVATE_KEY }}" > private-key.pem
           chmod 600 private-key.pem

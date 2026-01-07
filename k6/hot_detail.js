@@ -22,7 +22,7 @@ export const options = {
 
 export function setup(){
     const url = 
-        'http://localhost:4040/api/v1/response/show-club-list?size=8&page=0&type=Popular';
+        'http://43.202.199.147:4040/api/v1/response/show-club-list?size=8&page=0&type=Popular';
     const res = http.get(url);
 
     check(res, { 'list 200': r => r.status === 200 });
@@ -65,12 +65,12 @@ export default function(data){
 
     const clubId = chooseRandomByWeights(data.clubIds, data.weights);
 
-    const url = `http://localhost:4040/api/v1/response/show-club/57`;
+    const url = `http://43.202.199.147:4040/api/v1/response/show-club/${clubId}`;
 
     const res = http.get(
         url  ,{
                 headers: {
-                    Origin: 'http://localhost:3000'
+                    Origin: 'http://43.202.199.147'
                 },
             }
         );
@@ -96,3 +96,21 @@ export default function(data){
     //  { expected_response:true }...: avg=7.79ms min=5.64ms med=7.32ms max=85.44ms p(90)=8.6ms p(95)=9.26ms
     //http_req_failed................: 0.00%  0 out of 294
     //http_reqs......................: 294    14.204972/
+
+
+
+// 배포 테스트 환경
+//redis 있을 시
+    //HTTP
+    //http_req_duration..............: avg=13.94ms min=11.12ms med=13.5ms max=49.54ms p(90)=15.69ms p(95)=16.66ms
+    //  { expected_response:true }...: avg=13.94ms min=11.12ms med=13.5ms max=49.54ms p(90)=15.69ms p(95)=16.66ms
+    //http_req_failed................: 0.00%  0 out of 294
+    //http_reqs......................: 294    14.253106/s
+
+//redis 없을 시 
+    //HTTP
+    //http_req_duration..............: avg=21.67ms min=16.71ms med=20.55ms max=93.06ms p(90)=23.65ms p(95)=26.09ms
+    //  { expected_response:true }...: avg=21.67ms min=16.71ms med=20.55ms max=93.06ms p(90)=23.65ms p(95)=26.09ms
+    //http_req_failed................: 0.00%  0 out of 294
+    //http_reqs......................: 294    14.19439/s
+
