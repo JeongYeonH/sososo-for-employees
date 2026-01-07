@@ -37,6 +37,6 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler{
             String token = jwtProvider.create(userId);
             System.out.println("OAuth2 authentication success: " + authentication.getName());
             System.out.println("핸들러 거치고 나옴");
-            response.sendRedirect("http://" + frontendUrl + ":3000/auth/oauth-response/" + token + "/3600");
+            response.sendRedirect("http://" + frontendUrl + "/auth/oauth-response/" + token + "/3600");
     }
 }
