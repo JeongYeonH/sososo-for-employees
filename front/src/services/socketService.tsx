@@ -6,6 +6,7 @@ export const createWebSocketClient = (setMessages: any) => {
     const hostname = window.location.hostname;
     const API_BASE_URL = `http://${hostname}:4040`;
 
+    
     const client = new Client({
         webSocketFactory: () => new SockJS(`${API_BASE_URL}/api/v1/user/chat`),
         connectHeaders: {},
