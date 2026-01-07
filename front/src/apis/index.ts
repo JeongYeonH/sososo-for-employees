@@ -20,8 +20,9 @@ const errorHandler = (error: any) => {
     return responseBody;
 }
 
-const DOMAIN = `http://localhost:4040`;
-const API_DOMAIN = `${DOMAIN}/api/v1`;
+const hostname = window.location.hostname;
+const API_BASE_URL = `http://${hostname}:4040`;
+const API_DOMAIN = `${API_BASE_URL}/api/v1`;
 
 export const SNS_SIGN_IN_URL = (type: 'kakao' | 'google') => `${API_DOMAIN}/auth/oauth2/${type}`;
 const SIGN_IN_URL = () => `${API_DOMAIN}/auth/sign-in`;
