@@ -9,11 +9,13 @@ export const options = {
             startRate: 5,
             timeUnit: '1s',
             preAllocatedVUs: 10,
-            maxVUs: 50,
+            maxVUs: 1000,
 
             stages: [
                 { target: 10, duration: '5s'},
-                { target: 30, duration: '10s'},
+                { target: 100, duration: '10s'},
+                { target: 500, duration: '10s'},
+                { target: 1000, duration: '10s'},
                 { target: 0, duration: '5s'}
             ],
         },
@@ -33,7 +35,7 @@ export default function(){
 
     const useCategory = Math.random() < 0.5;
     
-    const base = 'http://localhost:4040';
+    const base = 'http://43.202.199.147:4040';
     const command1 = 'show-club-list';
     const command2 = 'show-club-list-category';
 
@@ -59,7 +61,7 @@ export default function(){
     const res = http.get(
         url ,{
                 headers: {
-                    Origin: 'http://localhost:3000'
+                    Origin: 'http://43.202.199.147'
                 },
             }
         );
@@ -71,6 +73,7 @@ export default function(){
     sleep(1)
 }
 
+// 로컬 테스트 환경
 //redis 있을 시 .. max가 가끔 튐
     //HTTP
     //http_req_duration..............: avg=4.64ms min=1.37ms med=3.08ms max=32.42ms p(90)=7.92ms p(95)=8.44ms
@@ -84,3 +87,23 @@ export default function(){
     //  { expected_response:true }...: avg=8.5ms min=4.13ms med=6.62ms max=32.74ms p(90)=19.4ms p(95)=20.61ms
     //http_req_failed................: 0.00%  0 out of 293
     //http_reqs......................: 293    14.223049/s
+
+
+
+// 배포 테스트 환경
+//redis 있을 시
+    //HTTP
+    //http_req_duration..............: avg=12.81ms min=4.49ms med=11.99ms max=37.54ms p(90)=19.87ms p(95)=20.82ms
+    //  { expected_response:true }...: avg=12.81ms min=4.49ms med=11.99ms max=37.54ms p(90)=19.87ms p(95)=20.82ms
+    //http_req_failed................: 0.00%  0 out of 293
+    //http_reqs......................: 293    14.2233/s
+
+//redis 없을 시 
+    //HTTP
+    //http_req_duration..............: avg=28.34ms min=12.67ms med=20.64ms max=108.66ms p(90)=60.01ms p(95)=66.95ms
+    //  { expected_response:true }...: avg=28.34ms min=12.67ms med=20.64ms max=108.66ms p(90)=60.01ms p(95)=66.95ms
+    //http_req_failed................: 0.00%  0 out of 292
+    //http_reqs......................: 292    14.168114/s
+
+
+

@@ -330,7 +330,6 @@ public class ClubServiceImplement implements ClubService{
         Set<Object> raw = 
             redisTemplate.opsForZSet().reverseRange("club:ranking", 0, TOP_N - 1);
         
-        System.out.println("maintainTopClubDetailCache + 주기적으로 돌아야");
         @SuppressWarnings("null")
         Set<Integer> topIds = raw.stream()
             .map(o -> Integer.parseInt(o.toString()))
@@ -361,7 +360,6 @@ public class ClubServiceImplement implements ClubService{
 
     @Override
     public void flushVisitDeltaToDB(){
-        System.out.println("flushVisitDeltaToDB + 주기적으로 돌아야");
         ScanOptions options = ScanOptions.scanOptions()
             .match("club:visit:*")
             .count(100)

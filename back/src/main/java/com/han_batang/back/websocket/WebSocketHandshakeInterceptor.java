@@ -21,7 +21,7 @@ public class WebSocketHandshakeInterceptor implements HandshakeInterceptor {
     ) throws Exception {
         String authHeader = null;
         String roomId = null;
-        System.out.println("Handshake started");
+        //System.out.println("Handshake started");
         String query = request.getURI().getQuery();
         if (query != null && query.contains("Authorization")) {
             String[] queryParams = query.split("&");
@@ -37,12 +37,12 @@ public class WebSocketHandshakeInterceptor implements HandshakeInterceptor {
     
         System.out.println("authHeader is: " + authHeader);
         if (authHeader != null) {
-            System.out.println("헤더가 저장됩니다");
+            //System.out.println("헤더가 저장됩니다");
             attributes.put("Authorization", authHeader); 
         }
 
         if (roomId != null) {
-            System.out.println("룸 아이디가 저장됩니다");
+            //System.out.println("룸 아이디가 저장됩니다");
             attributes.put("roomId", roomId);
         }
         return true;

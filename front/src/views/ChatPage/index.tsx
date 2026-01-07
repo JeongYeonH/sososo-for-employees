@@ -44,6 +44,8 @@ export function JoinChatPage() {
 
     const token = getCookie('accessToken');
     const location = useLocation();
+    const hostname = window.location.hostname;
+    const API_BASE_URL = `http://${hostname}:4040`;
     
     const userId = userInfoData?.userId;
 
@@ -85,7 +87,7 @@ export function JoinChatPage() {
 
     useEffect(() => {
         const notificationClient = new Client({
-            webSocketFactory: () => new SockJS("http://localhost:4040/api/v1/user/chat"),
+            webSocketFactory: () => new SockJS(`${API_BASE_URL}:4040/api/v1/user/chat`),
             onConnect: () => {
                 notificationClient.subscribe(`/room/notifications/${userId}`, (message) => {
                     const notification = JSON.parse(message.body);
@@ -138,7 +140,7 @@ export function JoinChatPage() {
         const client = new Client({
             
             webSocketFactory: () => 
-                new SockJS(`http://localhost:4040/api/v1/user/chat?Authorization=Bearer ${token}&roomId=${chatRoom.chatRoomId.toString()}`),
+                new SockJS(`${API_BASE_URL}/api/v1/user/chat?Authorization=Bearer ${token}&roomId=${chatRoom.chatRoomId.toString()}`),
             connectHeaders:{},
             onConnect: () => {
                 client.subscribe(`/room/${chatRoom.chatRoomId}`, (message)=>{

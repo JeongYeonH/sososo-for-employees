@@ -37,7 +37,7 @@
 ![erdcloudsososo](https://github.com/user-attachments/assets/e573bc36-e7d8-402e-bc7c-839a5ef254aa) <br><br>
 
 **아키텍처**
-![sososoarchitect](https://github.com/user-attachments/assets/bf16ad8b-b0f8-40a3-ba45-0acb2d24c20b)
+![도식화-배포도.pdf](https://github.com/user-attachments/files/24420562/-.pdf)
 ***
 
 ## **기술적 의사결정**

@@ -47,15 +47,15 @@ public class RedisCacheConfig implements CacheConfig{
     public RedisCacheManager redisCacheManager(RedisConnectionFactory connectionFactory){
         RedisCacheConfiguration config = 
             RedisCacheConfiguration.defaultCacheConfig()
-               .serializeKeysWith(
+                .serializeKeysWith(
                     RedisSerializationContext.SerializationPair
                         .fromSerializer(new StringRedisSerializer())
-               )
-               .serializeValuesWith(
+                )
+                .serializeValuesWith(
                     RedisSerializationContext.SerializationPair
                         .fromSerializer(new GenericJackson2JsonRedisSerializer())
-               )
-               .entryTtl(Duration.ofMinutes(3));
+                )
+                .entryTtl(Duration.ofMinutes(3));
 
         return RedisCacheManager.builder(connectionFactory)
                 .cacheDefaults(config)

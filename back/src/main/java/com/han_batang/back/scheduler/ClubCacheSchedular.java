@@ -15,7 +15,6 @@ public class ClubCacheSchedular {
     
     @Scheduled(fixedRate = 30_000)
     public void maintainTopCache(){
-        System.out.println("주기적으로 돌아야 - 밖");
         clubService.maintainTopClubDetailCache();
         clubService.flushVisitDeltaToDB();
     }
