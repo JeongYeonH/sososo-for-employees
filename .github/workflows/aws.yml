@@ -21,6 +21,14 @@ jobs:
       - name: 도커 빌드 설정 진행
         uses: docker/setup-buildx-action@v2
 
+      - name: 설정 파일 가져오기
+        run: |
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws configure set region ap-northeast-2
+          # 빌드 경로에 맞게 application.properties를 미리 다운로드합니다.
+          aws s3 cp s3://sososo-storge/application.properties back/src/main/resources/application.properties
+
       - name: gradlew 빌드
         run: |
           cd back
