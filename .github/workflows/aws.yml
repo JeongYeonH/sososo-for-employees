@@ -48,7 +48,7 @@ jobs:
           npm install
           CI=false npm run build
           # s3://sososo-storge 
-          aws s3 sync ./build s3://sososo-storge --exclude "application.properties" --exclude "*.tar" --delete
+          aws s3 sync ./build s3://sososo-storge --exclude "application.properties" 
 
       # --- [EC2 백엔드 실행] ---
       - name: EC2 접속 및 배포
@@ -69,8 +69,4 @@ jobs:
               -e "SPRING_PROFILES_ACTIVE=redis" \
               my-docker-back:latest
             
-            # 정리 
-            sudo docker stop my-front-container || true
-            sudo docker rm my-front-container || true
-            sudo docker image prune -f
           EOF
