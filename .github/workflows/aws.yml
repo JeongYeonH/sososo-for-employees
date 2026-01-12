@@ -73,9 +73,8 @@ jobs:
             sudo docker stop my-back-container || true
             sudo docker rm my-back-container || true
             sudo docker run -d --name my-back-container \
-              -p 4040:4040 \
-              --link my-redis:redis \
+              --add-host=host.docker.internal:host-gateway \
               -e "SPRING_PROFILES_ACTIVE=redis" \
-              my-docker-back:latest
+              -p 4040:4040 my-docker-back:latest
             
           EOF
