@@ -16,7 +16,6 @@ import { ResponseBody } from "types";
 import { ResponseCode } from "types/enums";
 import './style.css'
 import { useLocation } from "react-router-dom";
-import dotenv from 'dotenv';
 
 
 export function JoinChatPage() {
@@ -44,7 +43,7 @@ export function JoinChatPage() {
 
     const token = getCookie('accessToken');
     const location = useLocation();
-    const hostname = "43.202.199.147";
+    const hostname = process.env.REACT_APP_API_HOSTNAME;
     const API_BASE_URL = `http://${hostname}:4040`;
     
     const userId = userInfoData?.userId;

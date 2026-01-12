@@ -1,9 +1,9 @@
 import SockJS from 'sockjs-client';
 import { Client } from "@stomp/stompjs";
+import dotenv from 'dotenv';
 
 export const createWebSocketClient = (setMessages: any) => {
-
-    const hostname = "43.202.199.147";
+    const hostname = process.env.REACT_APP_API_HOSTNAME;
     const API_BASE_URL = `http://${hostname}:4040`;
 
     

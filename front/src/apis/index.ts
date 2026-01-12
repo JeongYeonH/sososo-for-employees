@@ -7,7 +7,6 @@ import CreateUserInfoRequestDto from "./request/user/create-user-info.request.dt
 import CreateUserInfoResponseDto from "./response/user/create-user-info.response.dto";
 import { ResponseDto } from "./response";
 import ShowClubListCategoryRequestDto from "./request/club/show-club-list-category.request.dto";
-import dotenv from 'dotenv';
 
 const responseHandler = <T>(response: AxiosResponse<any, any>) => {
     const responseBody: T = response.data;
@@ -20,7 +19,7 @@ const errorHandler = (error: any) => {
     return responseBody;
 }
 
-const hostname = "43.202.199.147";
+const hostname = process.env.REACT_APP_API_HOSTNAME;
 const API_BASE_URL = `http://${hostname}:4040`;
 const API_DOMAIN = `${API_BASE_URL}/api/v1`;
 
