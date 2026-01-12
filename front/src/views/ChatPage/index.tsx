@@ -44,7 +44,7 @@ export function JoinChatPage() {
 
     const token = getCookie('accessToken');
     const location = useLocation();
-    const hostname = window.location.hostname;
+    const hostname = "43.202.199.147";
     const API_BASE_URL = `http://${hostname}:4040`;
     
     const userId = userInfoData?.userId;

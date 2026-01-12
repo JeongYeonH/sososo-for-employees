@@ -13,6 +13,7 @@ import { ShowClubListRequestDto } from 'apis/request/club';
 import ClubDto from 'apis/response/club/club.dto';
 import { getCookie } from 'utils';
 import NotificationDto from 'apis/response/user/notification.dto';
+import { useAuthStore } from 'store/state-store';
 
 export default function ViewUserPage() {
 
@@ -28,11 +29,13 @@ export default function ViewUserPage() {
   const token = getCookie('accessToken');
 
   const navigate = useNavigate();
+  const logout = useAuthStore((state) => state.logout);
 
 
   const handleLogout = () => {
     deleteCookie('accessToken');
     setIsLoggedIn(false);
+    logout();
     navigate('/')
     window.location.reload();
   }
@@ -50,10 +53,10 @@ export default function ViewUserPage() {
 
   useEffect(()=>{
       const fetchClubData = async () =>{
-        console.log('시작')
+        //console.log('시작')
         const response = await showUserInfoRequest(token)
-        console.log('리스폰스')
-        console.log(response)       
+        //console.log('리스폰스')
+        //console.log(response)       
         if(response.code == "ND"){
           setNoData(true);
         }
@@ -90,7 +93,7 @@ export default function ViewUserPage() {
   }
 
   const handleCardClick = (clubId: any) => {
-    console.log('네비게이트 작동')
+    //console.log('네비게이트 작동')
     navigate(`/response/show-club/${clubId}`);
   }
 

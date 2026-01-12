@@ -30,13 +30,13 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler{
         HttpServletResponse response,
         Authentication authentication) 
         throws IOException, ServletException{
-            System.out.println("핸들러 진입");
+            //System.out.println("핸들러 진입");
             OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
             String userId = oAuth2User.getName();
-            System.out.println("사용자 이름은: " + userId);
+            //System.out.println("사용자 이름은: " + userId);
             String token = jwtProvider.create(userId);
             System.out.println("OAuth2 authentication success: " + authentication.getName());
-            System.out.println("핸들러 거치고 나옴");
+            //System.out.println("핸들러 거치고 나옴");
             response.sendRedirect("http://" + frontendUrl + "/auth/oauth-response/" + token + "/3600");
     }
 }
