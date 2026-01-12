@@ -7,13 +7,14 @@ import { BsChatText } from "react-icons/bs";
 import UserInfoDto from 'apis/response/user/user-info.dto';
 import { showUserInfoRequest } from 'apis';
 import { getCookie } from 'utils';
+import { useAuthStore } from 'store/state-store';
 import './navbar.css'
 
 
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const [loggedIn, setLoggedIn] = useState(false);
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const [userInfoData, setUserInfoData] = useState<UserInfoDto | null>(null);
   
 
@@ -34,24 +35,21 @@ const Navbar = () => {
   }
   
 
-  useEffect(() => {
-    const token = getCookie('accessToken');
-    setLoggedIn(!!token); 
-  }, []);
-
   useEffect(()=>{
-    const fetchClubData = async () =>{
+    if (!isLoggedIn) return;
 
+    const fetchClubData = async () =>{
       const token = getCookie('accessToken');
+      if(!token) return;
+      
+      useAuthStore.getState().login();
       const response = await showUserInfoRequest(token)        
       setUserInfoData(response);
+      
     }
     fetchClubData();
-  },[])
+  },[isLoggedIn])
   
-
-
-
   const url = userInfoData?.userThumbnailUrl;
 
   return (
@@ -65,7 +63,7 @@ const Navbar = () => {
         </div>
       </div>
         <div className='user-info'>
-          { loggedIn ? (
+          { isLoggedIn ? (
             <>
               <div className='user-logged-info'>
                 <BsChatText />

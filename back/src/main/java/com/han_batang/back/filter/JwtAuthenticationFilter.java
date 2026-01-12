@@ -34,8 +34,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
             try{
 
                 String token = parseBearerToken(request);
+                String path = request.getRequestURI();
+
+                if (path.startsWith("/oauth2/") || path.startsWith("/api/v1/auth/oauth2")) {
+                    filterChain.doFilter(request, response);
+                    return;
+                }
     
-                if (token != null) {
+                if (token != null && !token.equalsIgnoreCase("null")) {
                     System.out.println("JWT 토큰이 발견되었습니다: " + token);
                     String userId = jwtProvider.validate(token);
         
@@ -57,17 +63,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
                 exception.printStackTrace();
             }
            
-        }
+    }
 
     private String parseBearerToken(HttpServletRequest request){
         String authorization = request.getHeader("Authorization");
-        boolean hasAuthorization = StringUtils.hasText(authorization);
-        if(!hasAuthorization) return null;
 
-        boolean isBearer = authorization.startsWith("Bearer ");
-        if(!isBearer) return null;
+        if (!StringUtils.hasText(authorization) || 
+            authorization.equalsIgnoreCase("Bearer null") || 
+            !authorization.startsWith("Bearer ")) {
+            return null;
+        }
 
-        String token = authorization.substring(7);
-        return token;
+        return authorization.substring(7);
     }
 }

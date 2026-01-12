@@ -8,6 +8,7 @@ import { CheckCertificationResponseDto, EmailCertificationResponseDto, IdCheckRe
 import { ResponseCode } from 'types/enums';
 import { ResponseBody } from 'types';
 import { useCookies } from 'react-cookie';
+import { useAuthStore } from 'store/state-store';
 import './style.css'
 
 export default function SignIn() {
@@ -21,6 +22,7 @@ export default function SignIn() {
     const [message, setMessage] = useState<string>('');  
     
     const navigate = useNavigate();
+    const login = useAuthStore((state) => state.login);
 
     const signInResponse = (responseBody: ResponseBody<SignInResponseDto>) =>{
         if(!responseBody) return;
@@ -34,6 +36,7 @@ export default function SignIn() {
         const now = new Date().getTime();
         const expires = new Date(now + expirationTime*1000);
         setCookie('accessToken', token, {expires, path: '/' });
+        login();
         navigate('/');
     }
 
@@ -63,7 +66,7 @@ export default function SignIn() {
     };
 
     const onSnSSignInButtonClickHandler = (type: 'kakao' | 'google') =>{
-        console.log('실행 확인')
+        //console.log('실행 확인')
         window.location.href = SNS_SIGN_IN_URL(type);
     }
 
