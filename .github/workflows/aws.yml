@@ -33,7 +33,7 @@ jobs:
       - name: 백엔드 도커 이미지 빌드 및 S3 업로드
         run: |
           cd back
-          run: docker build -t my-docker-back ./back
+          docker build -t my-docker-back
           docker save my-docker-back -o my-docker-back.tar
           
           aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
