@@ -66,7 +66,7 @@ export default function SignIn() {
     };
 
     const onSnSSignInButtonClickHandler = (type: 'kakao' | 'google') =>{
-        //console.log('실행 확인')
+        console.log('실행 확인')
         window.location.href = SNS_SIGN_IN_URL(type);
     }
 

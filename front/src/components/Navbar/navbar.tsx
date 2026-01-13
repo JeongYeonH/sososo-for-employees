@@ -36,8 +36,7 @@ const Navbar = () => {
   
 
   useEffect(()=>{
-    if (!isLoggedIn) return;
-
+    console.log("로그 상태 " + isLoggedIn);
     const fetchClubData = async () =>{
       const token = getCookie('accessToken');
       if(!token) return;
