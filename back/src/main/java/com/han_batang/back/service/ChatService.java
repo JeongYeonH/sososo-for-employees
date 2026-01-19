@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
 
+import com.han_batang.back.dto.request.chat.ChatMessageRequestDto;
 import com.han_batang.back.dto.response.chat.ChatRoomCreationResponseDto;
 import com.han_batang.back.dto.response.chat.ShowChatRoomListResponseDto;
 import com.han_batang.back.dto.response.chat.ShowMessageListResponseDto;
@@ -21,6 +22,7 @@ public interface ChatService {
     JoinChatEntity getJoinChatByGeneratedId(Integer chatGeneratedId);
     JoinChatEntity getRecieverJoinChatEntity(UserEntity roomMember, ChatRoomEntity room);
     void saveMessage(MessageEntity messageEntity);
+    void sendToKafka(ChatMessageRequestDto chatMessageRequestDto);
     void saveNotification(NotificationEntity notificationEntity);
     ResponseEntity<? super ShowMessageListResponseDto> showMessageListByRoom(Integer roomId);
     ResponseEntity<?> joinChatInvitation(String userId, String roomName);

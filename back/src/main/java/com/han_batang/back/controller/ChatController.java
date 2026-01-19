@@ -39,19 +39,18 @@ public class ChatController {
     public void sendMessage(ChatMessageRequestDto chatMessage){
         String destination = "/room/" + chatMessage.getRoomId();
         int roomId = Integer.parseInt(chatMessage.getRoomId());
-        JoinChatEntity joinChatEntity 
-        = chatService.getJoinChatByGeneratedId(chatMessage.getChatGeneratedId());
-        System.out.println(chatMessage.getChatGeneratedId());
+        // JoinChatEntity joinChatEntity 
+        // = chatService.getJoinChatByGeneratedId(chatMessage.getChatGeneratedId());
         
-        MessageEntity messageEntity 
-        = new MessageEntity(
-            joinChatEntity,
-            chatMessage.getContent(),
-            chatMessage.getSentTime()
-        );
-        chatService.saveMessage(messageEntity);
+        // MessageEntity messageEntity 
+        // = new MessageEntity(
+        //         joinChatEntity,
+        //         chatMessage.getContent(),
+        //         chatMessage.getSentTime()
+        //     );
+        //chatService.saveMessage(messageEntity);
+        chatService.sendToKafka(chatMessage);
         
-
         ChatRoomEntity currentChatRoom = chatService.getChatRoomByRoomId(roomId);
         List<UserEntity> roomMembers = chatService.findAllUsersByRoomId(roomId);
         Set<String> activeUsersInRoom = roomUserTracker.getActiveUsersInRoom(String.valueOf(roomId));
