@@ -11,6 +11,8 @@ import org.apache.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.han_batang.back.dto.event.ChatMessageEvent;
+import com.han_batang.back.dto.request.chat.ChatMessageRequestDto;
 import com.han_batang.back.dto.response.chat.ChatRoomCreationResponseDto;
 import com.han_batang.back.dto.response.chat.ChatRoomDto;
 import com.han_batang.back.dto.response.chat.MessageDto;
@@ -25,6 +27,7 @@ import com.han_batang.back.entity.MessageEntity;
 import com.han_batang.back.entity.NotificationEntity;
 import com.han_batang.back.entity.UserEntity;
 import com.han_batang.back.entity.UserInfoEntity;
+import com.han_batang.back.producer.ChatMessageProducer;
 import com.han_batang.back.repository.ChatRoomRepository;
 import com.han_batang.back.repository.ClubMemberRepository;
 import com.han_batang.back.repository.ClubRepository;
@@ -52,8 +55,8 @@ public class ChatServiceImplement implements ChatService{
     private final UserInfoRepository userInfoRepository;
     private final ClubMemberRepository clubMemberRepository;
     private final NotificationRepository notificationRepository;
-
-
+    
+    private final ChatMessageProducer chatMessageProducer;
 
     @Override
     public ChatRoomCreationResponseDto createChatRoom(UserEntity userEntity, String clubTitle, String userId, Boolean isForInvitation){
@@ -178,12 +181,21 @@ public class ChatServiceImplement implements ChatService{
     }
 
     @Override
-    public void saveMessage(@NonNull MessageEntity messageEntity) {
-        try{
-            messageRepository.save(messageEntity);
-        }catch(Exception exception){
-            exception.printStackTrace();
-        }
+    public void saveMessage(@NonNull MessageEntity messageEntity) {      
+        messageRepository.save(messageEntity);
+    }
+
+    @Override
+    public void sendToKafka(ChatMessageRequestDto dto) {       
+        ChatMessageEvent event = new ChatMessageEvent(
+            dto.getRoomId(),
+            dto.getChatGeneratedId(),
+            dto.getSender(),
+            dto.getContent(),
+            dto.getSentTime()
+        );
+
+        chatMessageProducer.sendMessage(event);
     }
 
     @Override
@@ -340,5 +352,4 @@ public class ChatServiceImplement implements ChatService{
         notificationRepository.save(targetNotificationEntity);
         return ResponseEntity.ok().build(); 
     }
-
 }
