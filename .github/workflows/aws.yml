@@ -81,12 +81,19 @@ jobs:
             sudo docker load -i /home/ubuntu/my-docker-back.tar
             sudo docker stop my-back-container || true
             sudo docker rm my-back-container || true
-            sudo docker run -d --name my-back-container -p 4040:4040 my-docker-back:latest
+            sudo docker run -d --name my-back-container -p 4040:4040 \
+            --add-host=host.docker.internal:host-gateway \
+            -e "SPRING_PROFILES_ACTIVE=redis" \
+            -e "SPRING_KAFKA_BOOTSTRAP_SERVERS=host.docker.internal:9092" \
+            my-docker-back:latest
 
             # 2. 컨슈머 업데이트
             aws s3 cp s3://sososo-storge/my-docker-back-consumer.tar /home/ubuntu/my-docker-back-consumer.tar
             sudo docker load -i /home/ubuntu/my-docker-back-consumer.tar
             sudo docker stop my-back-consumer-container || true
             sudo docker rm my-back-consumer-container || true
-            sudo docker run -d --name my-back-consumer-container -p 4041:4041 my-docker-back-consumer:latest
+            sudo docker run -d --name my-back-consumer-container -p 4041:4041 \
+            --add-host=host.docker.internal:host-gateway \
+            -e "SPRING_KAFKA_BOOTSTRAP_SERVERS=host.docker.internal:9092" \
+            my-docker-back-consumer:latest
           EOF

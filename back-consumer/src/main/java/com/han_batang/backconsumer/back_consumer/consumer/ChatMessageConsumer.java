@@ -26,7 +26,9 @@ public class ChatMessageConsumer {
     public void onMessage(String data){
         try{
             ChatMessageEvent event = objectMapper.readValue(data, ChatMessageEvent.class);
+            System.out.println("데이터를 받아옴: " + data);
             chatService.saveMessage(event);
+            System.out.println("데이터를 DB에 저장: " + event);
         }catch(Exception e){
             System.err.println("데이터 변환 에러 발생: " + e.getMessage());
         }
