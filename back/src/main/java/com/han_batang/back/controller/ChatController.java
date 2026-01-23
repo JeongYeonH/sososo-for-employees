@@ -19,7 +19,6 @@ import com.han_batang.back.dto.response.chat.ShowChatRoomListResponseDto;
 import com.han_batang.back.dto.response.chat.ShowMessageListResponseDto;
 import com.han_batang.back.entity.ChatRoomEntity;
 import com.han_batang.back.entity.JoinChatEntity;
-import com.han_batang.back.entity.MessageEntity;
 import com.han_batang.back.entity.NotificationEntity;
 import com.han_batang.back.entity.UserEntity;
 import com.han_batang.back.service.ChatService;

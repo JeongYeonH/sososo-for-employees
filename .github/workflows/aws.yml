@@ -28,7 +28,9 @@ jobs:
           aws configure set region ap-northeast-2
           # 빌드 경로에 맞게 application.properties를 미리 다운로드합니다.
           aws s3 cp s3://sososo-storge/application.properties back/src/main/resources/application.properties
-
+          aws s3 cp s3://sososo-storge/application.consumer.properties back-consumer/src/main/resources/application.properties
+    
+      # --- [back 도커 빌드] ---
       - name: gradlew 빌드
         run: |
           cd back
@@ -48,6 +50,16 @@ jobs:
           aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws configure set region ap-northeast-2
           aws s3 cp my-docker-back.tar s3://sososo-storge/my-docker-back.tar
+      
+      # --- [back-consumer 도커 빌드] ---         
+      - name: 백엔드 컨슈머 도커 이미지 빌드 및 S3 업로드
+        run: |
+          cd back-consumer
+          chmod +x ./gradlew
+          ./gradlew clean build -x test
+          docker build -t my-docker-back-consumer .
+          docker save my-docker-back-consumer -o my-docker-back-consumer.tar
+          aws s3 cp my-docker-back-consumer.tar s3://sososo-storge/my-docker-back-consumer.tar
 
       # --- [프론트엔드 빌드 & S3 정적 배포] ---
       - name: 프론트엔드 빌드 및 S3 싱크
@@ -63,18 +75,18 @@ jobs:
         run: |
           echo "${{ secrets.AWS_SSH_PRIVATE_KEY }}" > private-key.pem
           chmod 600 private-key.pem
-          
           ssh -o StrictHostKeyChecking=no -i private-key.pem ubuntu@ec2-43-202-199-147.ap-northeast-2.compute.amazonaws.com << 'EOF'
-            # 최신 백엔드 이미지 가져오기
+            # 1. 백엔드 업데이트
             aws s3 cp s3://sososo-storge/my-docker-back.tar /home/ubuntu/my-docker-back.tar
             sudo docker load -i /home/ubuntu/my-docker-back.tar
-            
-            # 기존 백엔드 컨테이너 교체
             sudo docker stop my-back-container || true
             sudo docker rm my-back-container || true
-            sudo docker run -d --name my-back-container \
-              --add-host=host.docker.internal:host-gateway \
-              -e "SPRING_PROFILES_ACTIVE=redis" \
-              -p 4040:4040 my-docker-back:latest
-            
+            sudo docker run -d --name my-back-container -p 4040:4040 my-docker-back:latest
+
+            # 2. 컨슈머 업데이트
+            aws s3 cp s3://sososo-storge/my-docker-back-consumer.tar /home/ubuntu/my-docker-back-consumer.tar
+            sudo docker load -i /home/ubuntu/my-docker-back-consumer.tar
+            sudo docker stop my-back-consumer-container || true
+            sudo docker rm my-back-consumer-container || true
+            sudo docker run -d --name my-back-consumer-container -p 4041:4041 my-docker-back-consumer:latest
           EOF
