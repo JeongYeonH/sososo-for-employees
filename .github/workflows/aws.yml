@@ -94,6 +94,7 @@ jobs:
             sudo docker rm my-back-consumer-container || true
             sudo docker run -d --name my-back-consumer-container -p 4041:4041 \
             --add-host=host.docker.internal:host-gateway \
+            -e "SPRING_PROFILES_ACTIVE=redis" \
             -e "spring.kafka.bootstrap-servers=host.docker.internal:9092" \
             my-docker-back-consumer:latest
           EOF

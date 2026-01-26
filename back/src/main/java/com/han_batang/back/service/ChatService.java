@@ -18,11 +18,11 @@ import com.han_batang.back.entity.UserEntity;
 public interface ChatService {   
     ChatRoomCreationResponseDto createChatRoom(UserEntity userEntity, String clubTitle, String userId, Boolean isForInvitation);
     ResponseEntity<? super ShowChatRoomListResponseDto> showChatRoomByUser(String userId);
-    ResponseEntity<?> getJoinChatRoomByUser(String userId, Integer roomId);
+    JoinChatEntity getJoinChatRoomByUser(String userId, Integer roomId);
     JoinChatEntity getJoinChatByGeneratedId(Integer chatGeneratedId);
     JoinChatEntity getRecieverJoinChatEntity(UserEntity roomMember, ChatRoomEntity room);
     void saveMessage(MessageEntity messageEntity);
-    void sendToKafka(ChatMessageRequestDto chatMessageRequestDto);
+    void sendMessageToKafka(ChatMessageRequestDto chatMessageRequestDto);
     void saveNotification(NotificationEntity notificationEntity);
     ResponseEntity<? super ShowMessageListResponseDto> showMessageListByRoom(Integer roomId);
     ResponseEntity<?> joinChatInvitation(String userId, String roomName);
@@ -31,4 +31,5 @@ public interface ChatService {
     ChatRoomEntity getChatRoomByRoomId(Integer roomId);
     Optional<NotificationEntity> getAlreadyStackedNotification(JoinChatEntity joinChatEntity);
     ResponseEntity<?> readMessage(Integer notificationId);
+    void sendNotificationToKafka(ChatMessageRequestDto chatMessage);
 }
