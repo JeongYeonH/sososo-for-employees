@@ -15,6 +15,7 @@ public class ChatMessageProducer {
     private static final String TOPIC = "chat-message";
 
     public void sendMessage(ChatMessageEvent event){
+        System.out.println("chat-message 프로듀서 실행, event: " + event);
         kafkaTemplate.send(TOPIC, event.getRoomId(), event);
     }
 }

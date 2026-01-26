@@ -1,9 +1,5 @@
 package com.han_batang.back.controller;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -17,12 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import com.han_batang.back.dto.request.chat.ChatMessageRequestDto;
 import com.han_batang.back.dto.response.chat.ShowChatRoomListResponseDto;
 import com.han_batang.back.dto.response.chat.ShowMessageListResponseDto;
-import com.han_batang.back.entity.ChatRoomEntity;
-import com.han_batang.back.entity.JoinChatEntity;
-import com.han_batang.back.entity.NotificationEntity;
-import com.han_batang.back.entity.UserEntity;
 import com.han_batang.back.service.ChatService;
-import com.han_batang.back.websocket.RoomUserTracker;
 
 import lombok.RequiredArgsConstructor;
 
@@ -32,69 +23,67 @@ public class ChatController {
 
     private final SimpMessagingTemplate messagingTemplate;
     private final ChatService chatService;
-    private final RoomUserTracker roomUserTracker;
 
     @MessageMapping("/chat.sendMessage/{roomId}")
     public void sendMessage(ChatMessageRequestDto chatMessage){
         String destination = "/room/" + chatMessage.getRoomId();
-        int roomId = Integer.parseInt(chatMessage.getRoomId());
-        // JoinChatEntity joinChatEntity 
-        // = chatService.getJoinChatByGeneratedId(chatMessage.getChatGeneratedId());
+        //int roomId = Integer.parseInt(chatMessage.getRoomId());
         
-        // MessageEntity messageEntity 
-        // = new MessageEntity(
-        //         joinChatEntity,
-        //         chatMessage.getContent(),
-        //         chatMessage.getSentTime()
-        //     );
-        //chatService.saveMessage(messageEntity);
-        chatService.sendToKafka(chatMessage);
-        
-        ChatRoomEntity currentChatRoom = chatService.getChatRoomByRoomId(roomId);
-        List<UserEntity> roomMembers = chatService.findAllUsersByRoomId(roomId);
-        Set<String> activeUsersInRoom = roomUserTracker.getActiveUsersInRoom(String.valueOf(roomId));
-
-        for(UserEntity roomMember : roomMembers){
-            if(roomMember.getUserInfoEntity().getNickName() == chatMessage.getSender()){
-                System.out.println("발신자이므로 알람 안함" + roomMember.getUserId());
-                continue;
-            }
-            if(activeUsersInRoom.contains(roomMember.getUserId())){
-                System.out.println("다음 접속자에게는 알람 안함" + roomMember.getUserId());
-                continue;
-            }
-            String notice = "메시지가 발송되었습니다.";
-            String route = "/room/" + roomId;
-            String userDestination = "/room/notifications/" + roomMember.getUserId();
-            messagingTemplate.convertAndSend(userDestination, notice);
-            
-            JoinChatEntity sendTo 
-            = chatService.getRecieverJoinChatEntity(roomMember, currentChatRoom);
-            Optional<NotificationEntity> isAlreadyStacked = chatService.getAlreadyStackedNotification(sendTo);
-            System.out.println("기존 스택된 알람엔터티: " + isAlreadyStacked);
-            if(isAlreadyStacked.isPresent()){
-                System.out.println("기존 알람에 추가");
-                NotificationEntity notificationEntity = isAlreadyStacked.get();
-                notificationEntity.setNotificationContent(chatMessage.getContent());
-                notificationEntity.setNotificationSentTime(chatMessage.getSentTime());
-                notificationEntity.setStacks(notificationEntity.getStacks() + 1);
-                chatService.saveNotification(notificationEntity);
-            }else{
-                System.out.println("새로운 알람");
-                NotificationEntity notificationEntity
-                = new NotificationEntity(
-                    null,
-                    sendTo,
-                    chatMessage.getContent(),
-                    chatMessage.getSentTime(),
-                    false,
-                    1,
-                    route
-                );
-                chatService.saveNotification(notificationEntity);
-            }
-        }      
         messagingTemplate.convertAndSend(destination, chatMessage);
+        
+        System.out.println("컨트롤러 입니다, chatMessage: " + chatMessage);
+        chatService.sendMessageToKafka(chatMessage);
+        
+        //------ 여기까지가 메시지 발송 로직 -------//
+        chatService.sendNotificationToKafka(chatMessage);
+        
+        // ChatRoomEntity currentChatRoom = chatService.getChatRoomByRoomId(roomId);
+        // List<UserEntity> roomMembers = chatService.findAllUsersByRoomId(roomId);
+        //Set<String> activeUsersInRoom = roomUserTracker.getActiveUsersInRoom(String.valueOf(roomId));
+
+        // Set<Object> offlines = redisTemplate.opsForSet().difference(
+        //     "room:" + roomId + ":members",
+        //     "room:" + roomId + ":active"
+        // );
+        // Set<String> offLineUsers = offlines.stream().map(String::valueOf).collect(Collectors.toSet());
+        // System.out.println("모든 오프라인 유저들: " + offLineUsers.toString());
+        // for(String offLineUser : offLineUsers){
+            // if(offLineUser.equals(chatMessage.getSender())){
+            //     System.out.println("발신자이므로 알람 안함" + offLineUser);
+            //     continue;
+            // }
+
+            // String notice = "메시지가 발송되었습니다.";
+            // String route = "/room/" + roomId;
+            // String userDestination = "/room/notifications/" + offLineUser;
+            // messagingTemplate.convertAndSend(userDestination, notice);
+        
+            // JoinChatEntity sendTo 
+            // = chatService.getJoinChatRoomByUser(offLineUser, roomId);
+            // Optional<NotificationEntity> isAlreadyStacked = chatService.getAlreadyStackedNotification(sendTo);
+            // System.out.println("알람 발송이 진행됨: " + offLineUser);
+            // if(isAlreadyStacked.isPresent()){
+            //     System.out.println("기존 알람에 추가");
+            //     NotificationEntity notificationEntity = isAlreadyStacked.get();
+            //     notificationEntity.setNotificationContent(chatMessage.getContent());
+            //     notificationEntity.setNotificationSentTime(chatMessage.getSentTime());
+            //     notificationEntity.setStacks(notificationEntity.getStacks() + 1);
+            //     chatService.saveNotification(notificationEntity);
+            // }else{
+            //     System.out.println("새로운 알람");
+            //     NotificationEntity notificationEntity
+            //     = new NotificationEntity(
+            //         null,
+            //         sendTo,
+            //         chatMessage.getContent(),
+            //         chatMessage.getSentTime(),
+            //         false,
+            //         1,
+            //         route
+            //     );
+            //     chatService.saveNotification(notificationEntity);
+            // }
+        // }      
     }
 
     @GetMapping("/api/v1/user/show-chat-room")
@@ -113,8 +102,8 @@ public class ChatController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userId = authentication.getName();
 
-        ResponseEntity<?> response = chatService.getJoinChatRoomByUser(userId, roomId);
-        return response;
+        Object responseData = chatService.getJoinChatRoomByUser(userId, roomId);
+        return ResponseEntity.ok(responseData);
     }
 
     @GetMapping("/api/v1/user/show-message-list/{roomId}")

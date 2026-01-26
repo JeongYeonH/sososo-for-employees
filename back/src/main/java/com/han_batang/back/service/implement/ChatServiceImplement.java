@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.han_batang.back.dto.event.ChatMessageEvent;
+import com.han_batang.back.dto.event.NotificationEvent;
 import com.han_batang.back.dto.request.chat.ChatMessageRequestDto;
 import com.han_batang.back.dto.response.chat.ChatRoomCreationResponseDto;
 import com.han_batang.back.dto.response.chat.ChatRoomDto;
@@ -28,6 +29,7 @@ import com.han_batang.back.entity.NotificationEntity;
 import com.han_batang.back.entity.UserEntity;
 import com.han_batang.back.entity.UserInfoEntity;
 import com.han_batang.back.producer.ChatMessageProducer;
+import com.han_batang.back.producer.NotificationProducer;
 import com.han_batang.back.repository.ChatRoomRepository;
 import com.han_batang.back.repository.ClubMemberRepository;
 import com.han_batang.back.repository.ClubRepository;
@@ -57,6 +59,7 @@ public class ChatServiceImplement implements ChatService{
     private final NotificationRepository notificationRepository;
     
     private final ChatMessageProducer chatMessageProducer;
+    private final NotificationProducer notificationProducer;
 
     @Override
     public ChatRoomCreationResponseDto createChatRoom(UserEntity userEntity, String clubTitle, String userId, Boolean isForInvitation){
@@ -71,7 +74,6 @@ public class ChatServiceImplement implements ChatService{
         chatRoomRepository.save(chatRoomEntity);
 
         Optional<UserInfoEntity> userInfoEntity = userInfoRepository.getUserInfo(userId);
-
         JoinChatEntity joinChatEntity
         = new JoinChatEntity(
             null, 
@@ -89,16 +91,13 @@ public class ChatServiceImplement implements ChatService{
     }
 
     @Override
-    public ChatRoomEntity getChatRoomByRoomId(Integer roomId){
-        
+    public ChatRoomEntity getChatRoomByRoomId(Integer roomId){        
         ChatRoomEntity chatRoomEntity = chatRoomRepository.findByChatRoomId(roomId);
-        return chatRoomEntity;
-      
+        return chatRoomEntity;     
     }
 
     @Override
     public JoinChatEntity getRecieverJoinChatEntity(UserEntity roomMember, ChatRoomEntity room){
-
         JoinChatEntity recieverJoinChat 
         = joinChatRepository.findByChatRoomEntityAndUserEntity(room, roomMember);
 
@@ -146,27 +145,15 @@ public class ChatServiceImplement implements ChatService{
     }
 
     @Override
-    public ResponseEntity<?> getJoinChatRoomByUser(String userId, @NonNull Integer roomId) {
-        try{
-                UserEntity userEntity = userRepository.findByUserId(userId);
-                Optional<ChatRoomEntity> chatRoomEntity = chatRoomRepository.findById(roomId);
-                if(!chatRoomEntity.isPresent()) {
-                    return ResponseEntity.status(HttpStatus.SC_NO_CONTENT).body("No content avaliable");
-                }              
-                Optional<JoinChatEntity> joinChatEntity 
-                = joinChatRepository
-                .findByChatRoomNUser(chatRoomEntity, userEntity);
+    public JoinChatEntity getJoinChatRoomByUser(String userId, @NonNull Integer roomId) {
+        UserEntity userEntity = userRepository.findByUserId(userId);
+        Optional<ChatRoomEntity> chatRoomEntity = chatRoomRepository.findById(roomId);
+        
+        Optional<JoinChatEntity> joinChatEntity 
+        = joinChatRepository
+        .findByChatRoomNUser(chatRoomEntity, userEntity);
 
-                if(joinChatEntity.isPresent()){
-                    return ResponseEntity.ok(joinChatEntity.get());
-                }else{
-                    return ResponseEntity.status(HttpStatus.SC_NO_CONTENT).body("No content avaliable");
-                }
-        }catch(Exception exception){
-            exception.printStackTrace();
-            return null;
-        }
-    
+        return joinChatEntity.orElse(null);  
     }
 
     @Override
@@ -186,7 +173,7 @@ public class ChatServiceImplement implements ChatService{
     }
 
     @Override
-    public void sendToKafka(ChatMessageRequestDto dto) {       
+    public void sendMessageToKafka(ChatMessageRequestDto dto) {       
         ChatMessageEvent event = new ChatMessageEvent(
             dto.getRoomId(),
             dto.getChatGeneratedId(),
@@ -194,9 +181,24 @@ public class ChatServiceImplement implements ChatService{
             dto.getContent(),
             dto.getSentTime()
         );
-
+        //System.out.println("message를 카프카로 보냅니다, dto: " + dto);
         chatMessageProducer.sendMessage(event);
     }
+
+    @Override
+    public void sendNotificationToKafka(ChatMessageRequestDto dto) {
+        NotificationEvent event = new NotificationEvent(
+            dto.getRoomId(),
+            dto.getChatGeneratedId(),
+            dto.getSender(),
+            dto.getContent(),
+            dto.getSentTime()
+        );
+        System.out.println("notification을 카프카로 보냅니다, dto: " + dto);
+         notificationProducer.sendNotification(event);
+        
+    }
+
 
     @Override
     public Optional<NotificationEntity> getAlreadyStackedNotification(JoinChatEntity joinChatEntity) {
